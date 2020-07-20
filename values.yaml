@@ -1,0 +1,40 @@
+
+kubeStateMetrics:
+  ## If false, kube-state-metrics sub-chart will not be installed
+  ## Deployed in its own repo in P4 to support NewRelic
+  enabled: true
+
+alertmanager:
+  resources: {}
+     limits:
+       cpu: 10m
+       memory: 32Mi
+     requests:
+       cpu: 10m
+       memory: 32Mi
+
+nodeExporter:
+  resources: {}
+     limits:
+       cpu: 200m
+       memory: 50Mi
+     requests:
+       cpu: 100m
+       memory: 30Mi
+server:
+  resources: {}
+     limits:
+       cpu: 500m
+       memory: 512Mi
+     requests:
+       cpu: 500m
+       memory: 512Mi
+
+pushgateway:
+  resources: {}
+     limits:
+       cpu: 10m
+       memory: 32Mi
+     requests:
+       cpu: 10m
+       memory: 32Mi
