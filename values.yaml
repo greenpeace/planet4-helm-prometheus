@@ -6,6 +6,8 @@ kube-state-metrics:
     repository: quay.io/coreos/kube-state-metrics
     tag: v1.8.0
     pullPolicy: IfNotPresent
+  collectors:
+    volumeattachments: false
 alertmanager:
   resources:
     limits:
