@@ -1,10 +1,11 @@
 ---
 kubeStateMetrics:
+  enabled: true
+kube-state-metrics:
   image:
     repository: quay.io/coreos/kube-state-metrics
     tag: v1.8.0
     pullPolicy: IfNotPresent
-  enabled: true
 alertmanager:
   resources:
     limits:
