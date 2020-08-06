@@ -1,6 +1,6 @@
 
 RELEASE := prometheus
-NAMESPACE := prometheus
+NAMESPACE := kube-system
 
 CHART_NAME := stable/prometheus
 CHART_VERSION ?= 11.7.0
