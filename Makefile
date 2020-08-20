@@ -1,9 +1,9 @@
 
-RELEASE := prometheus
+RELEASE := prometheus-operator
 NAMESPACE := kube-system
 
-CHART_NAME := stable/prometheus
-CHART_VERSION ?= 11.7.0
+CHART_NAME := stable/prometheus-operator
+CHART_VERSION ?= 9.3.1
 
 DEV_CLUSTER ?= p4-development
 DEV_PROJECT ?= planet-4-151612
@@ -29,7 +29,6 @@ ifndef CI
 endif
 	gcloud config set project $(DEV_PROJECT)
 	gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
-	-kubectl label namespace $(NAMESPACE)
 	helm upgrade --install --force --wait $(RELEASE) \
 		--namespace=$(NAMESPACE) \
 		--version $(CHART_VERSION) \
