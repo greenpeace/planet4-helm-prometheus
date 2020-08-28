@@ -33,7 +33,7 @@ endif
 		--namespace=$(NAMESPACE) \
 		--version $(CHART_VERSION) \
 		-f values.yaml \
-		--values env/dev/values.yml \
+		--values env/dev/values.yaml \
 		$(CHART_NAME)
 	$(MAKE) history
 
@@ -48,7 +48,7 @@ endif
 		--namespace=$(NAMESPACE) \
 		--version $(CHART_VERSION) \
 		-f values.yaml \
-		--values env/prod/values.yml \
+		--values env/prod/values.yaml \
 		$(CHART_NAME)
 	$(MAKE) history
 
