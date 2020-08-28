@@ -1,4 +1,11 @@
 ---
+prometheus:
+  storageClassName: standard
+  accessModes: ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
 kubeStateMetrics:
   enabled: true
 kube-state-metrics:

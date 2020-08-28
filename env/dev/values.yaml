@@ -1,0 +1,8 @@
+---
+grafana:
+  ingress:
+    enabled: true
+    hosts: grafana.p4.greenpeace.org
+    path: /
+    annotations:
+      kubernetes.io/ingress.class: traefik
