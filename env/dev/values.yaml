@@ -1,6 +1,5 @@
 ---
 grafana:
-hostname: global.p4.greenpeace.org
   ingress:
     enabled: true
     hosts:
