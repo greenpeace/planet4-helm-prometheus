@@ -1,12 +1,16 @@
 ---
 prometheus:
-  storage:
-  volumeClaimTemplate:
-    storageClassName: standard
-    accessModes: ReadWriteOnce
-    resources:
-      requests:
-        storage: 10Gi
+  server:
+    persistentVolume:
+      enabled: true
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
 
 kubeStateMetrics:
   enabled: true
