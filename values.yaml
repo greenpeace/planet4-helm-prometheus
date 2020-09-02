@@ -11,6 +11,13 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
+grafana:
+  persistence:
+    enabled: true
+  # storageClassName: default
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
 
 kubeStateMetrics:
   enabled: true

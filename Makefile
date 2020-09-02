@@ -34,6 +34,7 @@ endif
 		--version $(CHART_VERSION) \
 		-f values.yaml \
 		--values env/dev/values.yaml \
+		--set grafana.adminPassword:=$(DEV_GRAFANA_PW) \
 		$(CHART_NAME)
 	$(MAKE) history
 
