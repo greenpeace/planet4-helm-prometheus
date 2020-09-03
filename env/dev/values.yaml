@@ -1,6 +1,6 @@
 ---
 grafana:
-  adminPassword: '$(DEV_GRAFANA_PW)'
+  adminPassword: ""
   ingress:
     enabled: true
     hosts:
