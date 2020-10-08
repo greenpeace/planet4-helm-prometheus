@@ -1,5 +1,6 @@
 ---
 prometheus:
+  createCustomResource: false
   server:
     persistentVolume:
       enabled: true
