@@ -1,6 +1,5 @@
 ---
 prometheus:
-  createCustomResource: false
   server:
     persistentVolume:
       enabled: true
@@ -12,6 +11,10 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
+
+prometheusOperator:
+  createCustomResource: false
+
 grafana:
   persistence:
     enabled: true
