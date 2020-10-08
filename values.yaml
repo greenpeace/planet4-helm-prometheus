@@ -24,11 +24,5 @@ kubeStateMetrics:
 kube-state-metrics:
   image:
     repository: quay.io/coreos/kube-state-metrics
-    tag: v1.8.0
+    tag: v1.9.7
     pullPolicy: IfNotPresent
-  collectors:
-    # Not supported in 1.8 needed for K8 1.15
-    volumeattachments: false
-    validatingwebhookconfigurations: false
-    mutatingwebhookconfigurations: false
-    networkpolicies: false

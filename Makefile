@@ -1,9 +1,9 @@
 
-RELEASE := prometheus-operator
+RELEASE := prometheus-stack
 NAMESPACE := kube-system
 
-CHART_NAME := stable/prometheus-operator
-CHART_VERSION ?= 9.3.1
+CHART_NAME := prometheus-community/kube-prometheus-stack
+CHART_VERSION ?= 9.4.10
 
 DEV_CLUSTER ?= p4-development
 DEV_PROJECT ?= planet-4-151612
@@ -21,6 +21,7 @@ lint:
 
 init:
 	helm init --client-only
+	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	helm repo update
 
 dev: lint init
@@ -34,7 +35,6 @@ endif
 		--version $(CHART_VERSION) \
 		-f values.yaml \
 		--values env/dev/values.yaml \
-		--set grafana.adminPassword:=$(DEV_GRAFANA_PW) \
 		$(CHART_NAME)
 	$(MAKE) history
 
