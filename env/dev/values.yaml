@@ -1,6 +1,5 @@
 ---
 grafana:
-  adminPassword: ""
   ingress:
     enabled: true
     hosts:
