@@ -22,11 +22,3 @@ grafana:
   accessModes:
     - ReadWriteOnce
   size: 10Gi
-
-kubeStateMetrics:
-  enabled: true
-kube-state-metrics:
-  image:
-    repository: quay.io/coreos/kube-state-metrics
-    tag: v1.9.7
-    pullPolicy: IfNotPresent
