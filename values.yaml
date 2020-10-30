@@ -16,8 +16,8 @@ prometheusOperator:
   createCustomResource: false
   admissionWebhooks:
     enabled: false
-      patch:
-        enabled: true
+    patch:
+      enabled: false
   tlsProxy:
     enabled: true
 
