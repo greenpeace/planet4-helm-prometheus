@@ -9,6 +9,7 @@ prometheus:
           resources:
             requests:
               storage: 30Gi
+        selector: {}
     retention: 10d
 
 prometheusOperator:
