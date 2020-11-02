@@ -4,6 +4,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
+          storageClassName: standard
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -11,14 +12,12 @@ prometheus:
     retention: 10d
 
 prometheusOperator:
-  createCustomResource: false
   admissionWebhooks:
     enabled: false
     patch:
       enabled: false
   tlsProxy:
     enabled: false
-
 
 grafana:
   persistence:
