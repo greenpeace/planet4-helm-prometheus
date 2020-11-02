@@ -1,8 +1,5 @@
 ---
 prometheus:
-  server:
-    persistentVolume:
-      enabled: true
   prometheusSpec:
     storageSpec:
       volumeClaimTemplate:
@@ -11,6 +8,7 @@ prometheus:
           resources:
             requests:
               storage: 30Gi
+    retention: 10d
 
 prometheusOperator:
   createCustomResource: false
