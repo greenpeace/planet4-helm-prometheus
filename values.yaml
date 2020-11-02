@@ -19,7 +19,7 @@ prometheusOperator:
     patch:
       enabled: false
   tlsProxy:
-    enabled: true
+    enabled: false
 
 
 grafana:
