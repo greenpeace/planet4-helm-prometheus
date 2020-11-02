@@ -31,7 +31,7 @@ endif
 	gcloud config set project $(DEV_PROJECT)
 	gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
 	helm upgrade --install --force --wait $(RELEASE) \
-		--set adminPassword=$(DEV_GRAFANA_PW) \
+		--set grafana.adminPassword=$(DEV_GRAFANA_PW) \
 		--namespace=$(NAMESPACE) \
 		--version $(CHART_VERSION) \
 		-f values.yaml \
