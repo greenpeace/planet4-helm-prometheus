@@ -1,5 +1,5 @@
 ---
-docker_auth: &docker_auth
+docker-auth: &docker-auth
   auth:
     username: $DOCKERHUB_USERNAME
     password: $DOCKERHUB_PASSWORD
@@ -7,7 +7,7 @@ docker_auth: &docker_auth
 defaults: &defaults
   docker:
     - image: greenpeaceinternational/circleci-base:latest
-      <<: *docker_auth
+      <<: *docker-auth
 
 version: 2
 
