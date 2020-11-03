@@ -6,7 +6,6 @@ defaults: &defaults
         username: $DOCKERHUB_USERNAME
         password: splat
 
-
 version: 2
 
 jobs:
@@ -14,6 +13,8 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - run:
+          command: echo $DOCKERHUB_USERNAME
       - run: make lint | tee /tmp/lint.log
       - run:
           name: Notify failure
