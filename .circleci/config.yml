@@ -1,7 +1,8 @@
 ---
 docker_auth: &docker_auth
-  username: $DOCKERHUB_USERNAME
-  password: $DOCKERHUB_PASSWORD
+  auth:
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_PASSWORD
 
 defaults: &defaults
   docker:
