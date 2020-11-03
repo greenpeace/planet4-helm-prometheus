@@ -4,7 +4,7 @@ defaults: &defaults
     - image: greenpeaceinternational/circleci-base:latest
       auth:
         username: $DOCKERHUB_USERNAME
-        password: $DOCKERHUB_PASSWORD
+        password: splat
 
 
 version: 2
