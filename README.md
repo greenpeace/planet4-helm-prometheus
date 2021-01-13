@@ -1,4 +1,5 @@
 [![Greenpeace](https://circleci.com/gh/greenpeace/planet4-helm-prometheus.svg?style=shield)](https://circleci.com/gh/greenpeace/planet4-helm-prometheus)
+
 ![Planet4](./p4logo.png)
 # Kube Prometheus stack
 
@@ -27,7 +28,7 @@ This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/pl
 ### Usage
  - Access Grafana [here](https://grafana.p4.greenpeace.org/?orgId=1)
  - Clone the repo to access makefile commands via cli that are not executed via CircleCI
-  - `make status` - <em> display status of named release </em>
+   - `make status` - <em> display status of named release </em>
   - `make value` - <em> display user values followed by all values deployed </em>
   - `make history` - <em> display deployment history of named release </em>
   - `make delete` - <em> delete release while retaining history, CRDs, PVs etc.</em>
@@ -37,6 +38,4 @@ This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/pl
   - [P4 Gitbook](https://app.gitbook.com/@greenpeace/s/planet4/infrastructure/intro)
  - Internal use only
    - [P4 Notion](https://www.notion.so/p4infra/)
-   - [P4 Google Site](https://sites.google.com/greenpeace.org/
-p4-infra
-)
+   - [P4 Google Site](https://sites.google.com/greenpeace.org/p4-infra)
