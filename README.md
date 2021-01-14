@@ -12,7 +12,7 @@ A collection of Kubernetes manifests, Grafana dashboards, and Prometheus rules t
 >CRDs manually deployed in Dev
 
 ***
-### Requirements
+### Requirements - Internal Only
 -   Access to P4 Infra [environment](https://www.notion.so/p4infra/bab9d0b1f2db4d929a59916899d531c1?v=eca7b78e1ae345c6883a9b37c6b76cac)
 
 ### Built with
@@ -36,7 +36,7 @@ This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/pl
  
  ### Infra Documentation
  - External
-   - [P4 Gitbook](https://app.gitbook.com/@greenpeace/s/planet4/infrastructure/intro)
+   - [Planet 4 Handbook](https://app.gitbook.com/@greenpeace/s/planet4/infrastructure/intro)
  - Internal use only
    - [P4 Notion](https://www.notion.so/p4infra/)
    - [P4 Google Site](https://sites.google.com/greenpeace.org/p4-infra)
