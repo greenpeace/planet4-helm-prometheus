@@ -36,7 +36,7 @@ This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/pl
  
  ### Infra Documentation
  - External
-   - [Planet 4 Handbook](https://app.gitbook.com/@greenpeace/s/planet4/infrastructure/intro)
+   - [P4 Gitbook](https://support.greenpeace.org/planet4/infrastructure/intro)
  - Internal use only
    - [P4 Notion](https://www.notion.so/p4infra/)
    - [P4 Google Site](https://sites.google.com/greenpeace.org/p4-infra)
