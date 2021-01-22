@@ -31,15 +31,15 @@ This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/pl
    - `make status` - <em> display status of named release </em>
    - `make value` - <em> display user values followed by all values deployed </em>
    - `make history` - <em> display deployment history of named release </em>
-   - `make delete` - <em> delete release while retaining history, CRDs, PVs etc.</em>
+   - `make uninstall` - <em> delete release while retaining history, CRDs, PVs etc.</em>
    - `make destroy` - <em> destroy release including CRDs, PVs etc. </em> <strong> CAUSES DATA LOSS </strong>
- 
+
  ### Infra Documentation
  - External
    - [P4 Gitbook](https://support.greenpeace.org/planet4/infrastructure/intro)
  - Internal use only
    - [P4 Notion](https://www.notion.so/p4infra/)
    - [P4 Google Site](https://sites.google.com/greenpeace.org/p4-infra)
-   
+
  ### Contributing
  If your interested in contributing to P4 Infrastructure code please check our our community page [here](https://github.com/greenpeace/planet4).
