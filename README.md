@@ -9,14 +9,12 @@ A collection of Kubernetes manifests, Grafana dashboards, and Prometheus rules t
 
 >NOT currently deployed to the production cluster.  kube-state-metrics and NewRelic in use in production.
 
->CRDs manually deployed in Dev
-
 ***
 ### Requirements - Internal Only
 -   Access to P4 Infra [environment](https://www.notion.so/p4infra/bab9d0b1f2db4d929a59916899d531c1?v=eca7b78e1ae345c6883a9b37c6b76cac)
 
 ### Built with
-- [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts) helm chart
+- [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) helm chart
 
 ### Deployment
 This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/planet4-traefik)
@@ -31,6 +29,7 @@ This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/pl
    - `make status` - <em> display status of named release </em>
    - `make value` - <em> display user values followed by all values deployed </em>
    - `make history` - <em> display deployment history of named release </em>
+   - `make port` - <em> expose port to local machine to access service </em>
    - `make uninstall` - <em> delete release while retaining history, CRDs, PVs etc.</em>
    - `make destroy` - <em> destroy release including CRDs, PVs etc. </em> <strong> CAUSES DATA LOSS </strong>
 

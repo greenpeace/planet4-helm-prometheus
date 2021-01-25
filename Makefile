@@ -32,39 +32,39 @@ init:
 
 # Helm Deploy to Development - PW is a CircleCI env var
 dev: lint init
-ifndef CI
-	$(error Please commit and push, this is intended to be run in a CI environment)
-endif
-	gcloud config set project $(DEV_PROJECT)
-	gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
-	-kubectl create namespace $(NAMESPACE)
-	./create_crds.sh
-	helm3 upgrade --install --wait $(RELEASE) \
-		--namespace=$(NAMESPACE) \
-		--version $(CHART_VERSION) \
-		--set grafana.adminPassword=$(DEV_GRAFANA_PW) \
-		-f values.yaml \
-		--values env/dev/values.yaml \
-		$(CHART_NAME)
-	$(MAKE) history
+	ifndef CI
+		$(error Please commit and push, this is intended to be run in a CI environment)
+	endif
+		gcloud config set project $(DEV_PROJECT)
+		gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
+		-kubectl create namespace $(NAMESPACE)
+		./create_crds.sh
+		helm3 upgrade --install --wait $(RELEASE) \
+			--namespace=$(NAMESPACE) \
+			--version $(CHART_VERSION) \
+			--set grafana.adminPassword=$(DEV_GRAFANA_PW) \
+			-f values.yaml \
+			--values env/dev/values.yaml \
+			$(CHART_NAME)
+		$(MAKE) history
 
 # Helm Deploy to Production - PW is a CircleCI env var
 prod: lint init
-ifndef CI
-	$(error Please commit and push, this is intended to be run in a CI environment)
-endif
-	gcloud config set project $(DEV_PROJECT)
-	gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
-	-kubectl create namespace $(NAMESPACE)
-	./create_crds.sh
-	helm3 upgrade --install --wait $(RELEASE) \
-		--namespace=$(NAMESPACE) \
-		--version $(CHART_VERSION) \
-		--set grafana.adminPassword=$(PROD_GRAFANA_PW) \
-		-f values.yaml \
-		--values env/prod/values.yaml \
-		$(CHART_NAME)
-	$(MAKE) history
+	ifndef CI
+		$(error Please commit and push, this is intended to be run in a CI environment)
+	endif
+		gcloud config set project $(DEV_PROJECT)
+		gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
+		-kubectl create namespace $(NAMESPACE)
+		./create_crds.sh
+		helm3 upgrade --install --wait $(RELEASE) \
+			--namespace=$(NAMESPACE) \
+			--version $(CHART_VERSION) \
+			--set grafana.adminPassword=$(PROD_GRAFANA_PW) \
+			-f values.yaml \
+			--values env/prod/values.yaml \
+			$(CHART_NAME)
+		$(MAKE) history
 
 # Helm status
 status:
@@ -78,6 +78,11 @@ values:
 # Display helm history
 history:
 	helm3 history $(RELEASE) -n $(NAMESPACE) --max=5
+
+# Expose the port for the service
+port:
+	@echo "Visit http://127.0.0.1:9090 to access Prometheus"
+	kubectl port-forward --namespace $(NAMESPACE) svc/prometheus-stack-kube-prom-prometheus 9090:9090
 
 # Delete a release when you intend reinstalling it to keep history
 uninstall:
