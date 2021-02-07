@@ -1,6 +1,7 @@
 ---
 prometheus:
   prometheusSpec:
+    enableAdminAPI: true
     storageSpec:
       volumeClaimTemplate:
         spec:
