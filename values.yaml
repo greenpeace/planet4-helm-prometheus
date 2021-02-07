@@ -10,7 +10,7 @@ prometheus:
             requests:
               storage: 30Gi
           selector: {}
-    retention: 30d
+    retention: 10d
 
 prometheusOperator:
   createCustomResource: false

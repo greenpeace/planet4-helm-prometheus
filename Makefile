@@ -68,12 +68,12 @@ endif
 
 # Helm status
 status:
-	helm3 status $(CHART_NAME) -n $(NAMESPACE)
+	helm3 status $(RELEASE) -n $(NAMESPACE)
 
 # Display user values followed by all values
 values:
-	helm3 get values $(CHART_NAME) -n $(NAMESPACE)
-	helm3 get values $(CHART_NAME) -n $(NAMESPACE) -a
+	helm3 get values $(RELEASE) -n $(NAMESPACE)
+	helm3 get values $(RELEASE) -n $(NAMESPACE) -a
 
 # Display helm history
 history:
