@@ -1,7 +1,6 @@
 ---
 prometheus:
   prometheusSpec:
-    enableAdminAPI: true
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -11,7 +10,7 @@ prometheus:
             requests:
               storage: 30Gi
           selector: {}
-    retention: 10d
+    retention: 7d
 
 prometheusOperator:
   createCustomResource: false
