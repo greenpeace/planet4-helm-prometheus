@@ -13,7 +13,7 @@ prometheus:
           selector: {}
     retention: 10d
   thanos:
-    version: v0.15.0
+    version: v0.18.0
     objectStorageConfig:
       name: thanos-key
       key: objstore.yml
@@ -36,7 +36,6 @@ prometheusOperator:
       enabled: false
   tlsProxy:
     enabled: false
-
 grafana:
   persistence:
     enabled: true
