@@ -12,7 +12,22 @@ prometheus:
               storage: 30Gi
           selector: {}
     retention: 10d
-
+  thanos:
+    version: v0.15.0
+    objectStorageConfig:
+      name: thanos-key
+      key: objstore.yml
+  thanosIngress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: GRPC
+      nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+      nginx.ingress.kubernetes.io/grpc-backend: 'true'
+      nginx.ingress.kubernetes.io/protocol: h2c
+      nginx.ingress.kubernetes.io/proxy-read-timeout: '160'
+      nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+      nginx.ingress.kubernetes.io/auth-tls-verify-depth: "2"
+      nginx.ingress.kubernetes.io/auth-tls-secret: "kube-system/thanos-tls"
 prometheusOperator:
   createCustomResource: false
   admissionWebhooks:
