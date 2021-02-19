@@ -7,7 +7,7 @@ grafana:
     path: /
     annotations:
       kubernetes.io/ingress.class: traefik
-prometheus:  
+prometheus: 
   thanosIngress:
     hosts:
       - thanos.p4.greenpeace.org

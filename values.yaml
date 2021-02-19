@@ -2,9 +2,9 @@
 prometheus:
   service:
     additionalPorts:
-    - name: thanos-grpc
-      protocol: TCP
-      port: 10901
+      - name: thanos-grpc
+        protocol: TCP
+        port: 10901
   prometheusSpec:
     enableAdminAPI: true
     storageSpec:
