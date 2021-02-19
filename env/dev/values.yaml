@@ -10,6 +10,6 @@ grafana:
 prometheus:
   thanosIngress:
     hosts:
-      - grafana.p4.greenpeace.org
+      - thanos.p4.greenpeace.org
     annotations:
       kubernetes.io/ingress.class: nginx
