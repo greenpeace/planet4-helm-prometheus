@@ -25,11 +25,7 @@ metadata:
   name: thanos-key
   namespace: kube-system
 data:
-  objstore.yml: |
-    type: GCS
-    config:
-      bucket: thanos-global-prod-psu2yupeuq
-      service_account: |
-        ${DEV_THANOS_GOOGLE_SERVICE_ACCOUNT}
+  objstore.yml: >-
+    ${DEV_THANOS_GOOGLE_SERVICE_ACCOUNT}
 type: Opaque
 ---
