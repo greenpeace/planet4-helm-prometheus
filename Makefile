@@ -39,6 +39,7 @@ endif
 	gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
 	-kubectl create namespace $(NAMESPACE)
 	./create_crds.sh
+	kubectl apply -f secrets.yaml
 	helm3 upgrade --install --wait $(RELEASE) \
 		--namespace=$(NAMESPACE) \
 		--version $(CHART_VERSION) \
@@ -56,6 +57,7 @@ endif
 	gcloud config set project $(DEV_PROJECT)
 	gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
 	-kubectl create namespace $(NAMESPACE)
+	kubectl apply -f secrets.yaml
 	./create_crds.sh
 	helm3 upgrade --install --wait $(RELEASE) \
 		--namespace=$(NAMESPACE) \
@@ -100,11 +102,9 @@ destroy:
 config-secrets-dev:
 	@echo DEV: Appending Thanos Service Account credentials from environment to objstore.yaml
 	perl -p -i template.pl < ./env/dev/secrets.yaml.tpl > secrets.yaml
-	kubectl apply -f secrets.yaml
 
 config-secrets-prod:
 	@echo PROD: Appending Thanos Service Account credentials from environment to objstore.yaml
 	perl -p -i template.pl < ./env/prod/secrets.yaml.tpl > secrets.yaml
-	kubectl apply -f secrets.yaml
 
 	
