@@ -12,11 +12,11 @@ prometheus:
               storage: 30Gi
           selector: {}
     retention: 10d
-  thanos:
-    version: v0.18.0
-    objectStorageConfig:
-      name: thanos-key
-      key: objstore.yml
+    thanos:
+      version: v0.18.0
+      objectStorageConfig:
+        name: thanos-key
+        key: objstore.yml
   thanosIngress:
     enabled: true
     annotations:
