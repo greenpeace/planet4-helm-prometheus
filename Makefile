@@ -31,7 +31,7 @@ init:
 	helm3 repo update
 
 # Helm Deploy to Development - PW is a CircleCI env var
-dev: lint init
+dev: lint init config-secrets-dev 
 ifndef CI
 	$(error Please commit and push, this is intended to be run in a CI environment)
 endif
@@ -39,6 +39,7 @@ endif
 	gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
 	-kubectl create namespace $(NAMESPACE)
 	./create_crds.sh
+	kubectl apply -f secrets.yaml
 	helm3 upgrade --install --wait $(RELEASE) \
 		--namespace=$(NAMESPACE) \
 		--version $(CHART_VERSION) \
@@ -49,13 +50,14 @@ endif
 	$(MAKE) history
 
 # Helm Deploy to Production - PW is a CircleCI env var
-prod: lint init
+prod: lint init config-secrets-prod 
 ifndef CI
 	$(error Please commit and push, this is intended to be run in a CI environment)
 endif
 	gcloud config set project $(DEV_PROJECT)
 	gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
 	-kubectl create namespace $(NAMESPACE)
+	kubectl apply -f secrets.yaml
 	./create_crds.sh
 	helm3 upgrade --install --wait $(RELEASE) \
 		--namespace=$(NAMESPACE) \
@@ -96,3 +98,13 @@ destroy:
 	kubectl delete pvc -l app=prometheus -n $(NAMESPACE)
 	kubectl delete pvc -l app.kubernetes.io/instance=$(RELEASE) -n $(NAMESPACE)
 	./delete_crds.sh
+
+config-secrets-dev:
+	@echo DEV: Appending Thanos Service Account credentials from environment to objstore.yaml
+	perl -p -i template.pl < ./env/dev/secrets.yaml.tpl > secrets.yaml
+
+config-secrets-prod:
+	@echo PROD: Appending Thanos Service Account credentials from environment to objstore.yaml
+	perl -p -i template.pl < ./env/prod/secrets.yaml.tpl > secrets.yaml
+
+	

@@ -1,5 +1,10 @@
 ---
 prometheus:
+  service:
+    additionalPorts:
+      - name: thanos-grpc
+        protocol: TCP
+        port: 10901
   prometheusSpec:
     storageSpec:
       volumeClaimTemplate:
@@ -10,8 +15,30 @@ prometheus:
             requests:
               storage: 30Gi
           selector: {}
-    retention: 7d
-
+    retention: 10d
+    externalLabels:
+      environment: test
+      type: cluster
+      entity: planet4
+      name: planet4-dev
+      location: gcp
+      network: vpc
+    thanos:
+      version: v0.18.0
+      objectStorageConfig:
+        name: thanos-key
+        key: objstore.yml
+  thanosIngress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: GRPC
+      nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+      nginx.ingress.kubernetes.io/grpc-backend: 'true'
+      nginx.ingress.kubernetes.io/protocol: h2c
+      nginx.ingress.kubernetes.io/proxy-read-timeout: '160'
+      nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+      nginx.ingress.kubernetes.io/auth-tls-verify-depth: "2"
+      nginx.ingress.kubernetes.io/auth-tls-secret: "kube-system/thanos-tls"
 prometheusOperator:
   createCustomResource: false
   admissionWebhooks:
@@ -20,7 +47,6 @@ prometheusOperator:
       enabled: false
   tlsProxy:
     enabled: false
-
 grafana:
   persistence:
     enabled: true
