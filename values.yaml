@@ -14,8 +14,8 @@ prometheus:
           key_file: /certs/tls.key
           server_name: "alertmanager-it-operations-cluster.greenpeace.net"
         static_configs:
-        - targets:
-          - "alertmanager-it-operations-cluster.greenpeace.net"
+          - targets:
+              - "alertmanager-it-operations-cluster.greenpeace.net"
     storageSpec:
       volumeClaimTemplate:
         spec:

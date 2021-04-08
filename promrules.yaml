@@ -6,7 +6,8 @@ additionalPrometheusRulesMap:
         rules:
           - alert: ProbeFailed
             annotations:
-              description: '{{$labels.instance}} has not responded to a ping for the last 5m'
+              description: |
+                {{$labels.instance}} has not responded to a ping for the last 5m
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
@@ -20,7 +21,8 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: warning
               slack_channel: p4-slack-alert
-              gitlab_incident_markdown: "/label  ~\"Terraform Deployment\"\n Probe failed"
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe failed
           - alert: SlowProbe
             annotations:
               description: '{{$labels.instance}} probe is taking longer than 1s'
@@ -37,7 +39,8 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: warning
               slack_channel: p4-slack-alert
-              gitlab_incident_markdown: "/label  ~\"Terraform Deployment\"\n Probe slow"
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe slow
           - alert: HttpStatusCode
             annotations:
               description: '{{$labels.instance}} probe is taking longer than 1s'
@@ -54,7 +57,8 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: warning
               slack_channel: p4-slack-alert
-              gitlab_incident_markdown: "/label  ~\"Terraform Deployment\"\n HTTP probe failed"
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n HTTP probe failed
           - alert: HttpSlowRequests
             annotations:
               description: '{{$labels.instance}} probe is taking longer than 1s'
@@ -71,4 +75,5 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: warning
               slack_channel: p4-slack-alert
-              gitlab_incident_markdown: "/label  ~\"Terraform Deployment\"\n HTTP probe slow"
+              gitlab_incident_markdown: |
+                 /label  ~\"Terraform Deployment\"\n HTTP probe slow
