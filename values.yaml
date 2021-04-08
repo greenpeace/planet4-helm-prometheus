@@ -6,6 +6,16 @@ prometheus:
         protocol: TCP
         port: 10901
   prometheusSpec:
+    additionalAlertManagerConfigs:
+      - scheme: https
+        tls_config:
+          ca_file: /certs/cacerts.pem
+          cert_file: /certs/tls.crt
+          key_file: /certs/tls.key
+          server_name: "alertmanager-it-operations-cluster.greenpeace.net"
+        static_configs:
+        - targets:
+          - "alertmanager-it-operations-cluster.greenpeace.net"
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -15,6 +25,14 @@ prometheus:
             requests:
               storage: 30Gi
           selector: {}
+    volumes:
+      - name: certs
+        secret:
+          secretName: thanos-tls
+    volumeMounts:
+      - name: certs
+        mountPath: "/certs"
+        readOnly: true
     retention: 10d
     externalLabels:
       environment: test

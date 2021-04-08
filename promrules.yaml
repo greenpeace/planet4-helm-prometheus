@@ -1,56 +1,74 @@
 ---
 additionalPrometheusRulesMap:
-  rule-name:
+  planet4Rules:
     groups:
       - name: p4_websites
         rules:
           - alert: ProbeFailed
-            expr: probe_success == 0
-            for: 5m
-            labels:
-              severity: error
             annotations:
-              summary: "Probe failed (instance {{ $labels.instance }})"
-              description: |-
-                Probe failed
-                VALUE = {{ $value }}
-                LABELS: {{ $labels }}
+              description: '{{$labels.instance}} has not responded to a ping for the last 5m'
+              observability_url: >-
+                https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
+              runbook_url: >-
+                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ#heading=h.xl25afvmvuba
+              summary: '{{$labels.instance}} not responding'
+            expr: |
+              probe_success == 0
+            for: 2m
+            labels:
+              email_contact: global-it-operations@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: warning
+              slack_channel: p4-slack-alert
+              gitlab_incident_markdown: "/label  ~\"Terraform Deployment\"\n Probe failed"
           - alert: SlowProbe
-            expr: avg_over_time(probe_duration_seconds[1m]) > 1
-            for: 5m
-            labels:
-              severity: warning
             annotations:
-              summary: "Slow probe (instance {{ $labels.instance }})"
-              description: |-
-                Probe took more than 1s to complete
-                  VALUE = {{ $value }}
-                  LABELS: {{ $labels }}
+              description: '{{$labels.instance}} probe is taking longer than 1s'
               observability_url: >-
-                https://grafana.greenpeace.org/d/EmUBHUFGk/website-monitoring?from=1616392435040&to=1616394235040&orgId=1
+                https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
+              runbook_url: >-
+                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ#heading=h.xl25afvmvuba
+              summary: '{{$labels.instance}} responding slowly'
+            expr: |
+              avg_over_time(probe_duration_seconds[1m]) > 1
+            for: 2m
+            labels:
+              email_contact: global-it-operations@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: warning
+              slack_channel: p4-slack-alert
+              gitlab_incident_markdown: "/label  ~\"Terraform Deployment\"\n Probe slow"
           - alert: HttpStatusCode
-            expr: probe_http_status_code <= 199 OR probe_http_status_code >= 400
-            for: 5m
-            labels:
-              severity: error
             annotations:
-              summary: "HTTP Status Code (instance {{ $labels.instance }})"
-              description: |-
-                HTTP status code is not 200-399
-                  VALUE = {{ $value }}
-                  LABELS: {{ $labels }}
+              description: '{{$labels.instance}} probe is taking longer than 1s'
               observability_url: >-
-                https://grafana.greenpeace.org/d/EmUBHUFGk/website-monitoring?from=1616392435040&to=1616394235040&orgId=1
-          - alert: HttpSlowRequests
-            expr: avg_over_time(probe_http_duration_seconds[1m]) > 1
+                https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
+              runbook_url: >-
+                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ#heading=h.xl25afvmvuba
+              summary: '{{$labels.instance}} responding slowly'
+            expr: |
+              probe_http_status_code <= 199 OR probe_http_status_code >= 400
             for: 5m
             labels:
+              email_contact: global-it-operations@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
               severity: warning
+              slack_channel: p4-slack-alert
+              gitlab_incident_markdown: "/label  ~\"Terraform Deployment\"\n HTTP probe failed"
+          - alert: HttpSlowRequests
             annotations:
-              summary: "HTTP slow requests (instance {{ $labels.instance }})"
-              description: |-
-                HTTP request took more than 1s
-                  VALUE = {{ $value }}
-                  LABELS: {{ $labels }}
+              description: '{{$labels.instance}} probe is taking longer than 1s'
               observability_url: >-
-                https://grafana.greenpeace.org/d/EmUBHUFGk/website-monitoring?from=1616392435040&to=1616394235040&orgId=1
+                https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
+              runbook_url: >-
+                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ#heading=h.xl25afvmvuba
+              summary: '{{$labels.instance}} responding slowly'
+            expr: |
+              avg_over_time(probe_http_duration_seconds[1m]) > 1
+            for: 5m
+            labels:
+              email_contact: global-it-operations@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: warning
+              slack_channel: p4-slack-alert
+              gitlab_incident_markdown: "/label  ~\"Terraform Deployment\"\n HTTP probe slow"
