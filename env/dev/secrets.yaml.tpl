@@ -4,8 +4,6 @@ apiVersion: v1
 metadata:
   name: thanos-tls
   namespace: kube-system
-  labels:
-    app: fgt-prometheus-prod
 type: kubernetes.io/tls
 data:
   ca.crt: >-
