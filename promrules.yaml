@@ -1,6 +1,6 @@
 ---
 additionalPrometheusRulesMap:
-  planet4Rules:
+  planet4:
     groups:
       - name: p4_websites
         rules:
