@@ -13,6 +13,8 @@ additionalPrometheusRulesMap:
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.475lqkazle41
               summary: '{{$labels.instance}} not responding'
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe failed
             expr: |
               probe_success == 0
             for: 2m
@@ -21,8 +23,6 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: warning
               slack_channel: p4-slack-alert
-              gitlab_incident_markdown: |
-                /label  ~\"Terraform Deployment\"\n Probe failed
           - alert: SlowProbe
             annotations:
               description: '{{$labels.instance}} probe is taking longer than 2.5s'
@@ -31,6 +31,8 @@ additionalPrometheusRulesMap:
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.9as4myvdzik2
               summary: '{{$labels.instance}} responding slowly'
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe slow
             expr: |
               avg_over_time(probe_duration_seconds[1m]) > 2.5
             for: 2m
@@ -39,8 +41,6 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: warning
               slack_channel: p4-slack-alert
-              gitlab_incident_markdown: |
-                /label  ~\"Terraform Deployment\"\n Probe slow
           - alert: HttpStatusCode
             annotations:
               description: '{{$labels.instance}} probe is taking longer than 2s'
@@ -49,6 +49,8 @@ additionalPrometheusRulesMap:
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.xorjr89c765l
               summary: '{{$labels.instance}} responding slowly'
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n HTTP probe failed
             expr: |
               probe_http_status_code <= 199 OR probe_http_status_code >= 400
             for: 5m
@@ -57,8 +59,6 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: warning
               slack_channel: p4-slack-alert
-              gitlab_incident_markdown: |
-                /label  ~\"Terraform Deployment\"\n HTTP probe failed
           - alert: HttpSlowRequests
             annotations:
               description: '{{$labels.instance}} probe is taking longer than 2s'
@@ -67,6 +67,8 @@ additionalPrometheusRulesMap:
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
               summary: '{{$labels.instance}} responding slowly'
+              gitlab_incident_markdown: |
+                 /label  ~\"Terraform Deployment\"\n HTTP probe slow
             expr: |
               avg_over_time(probe_http_duration_seconds[1m]) > 2
             for: 5m
@@ -75,5 +77,3 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: warning
               slack_channel: p4-slack-alert
-              gitlab_incident_markdown: |
-                 /label  ~\"Terraform Deployment\"\n HTTP probe slow
