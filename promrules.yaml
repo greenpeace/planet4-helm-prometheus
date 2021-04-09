@@ -25,7 +25,8 @@ additionalPrometheusRulesMap:
               slack_channel: p4-slack-alert
           - alert: SlowProbe
             annotations:
-              description: '{{$labels.instance}} probe is taking longer than 2.5s'
+              description: |-
+                '{{$labels.instance}} probe is taking longer than 2.5s'
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
