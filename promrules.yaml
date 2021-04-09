@@ -25,14 +25,14 @@ additionalPrometheusRulesMap:
                 /label  ~\"Terraform Deployment\"\n Probe failed
           - alert: SlowProbe
             annotations:
-              description: '{{$labels.instance}} probe is taking longer than 1s'
+              description: '{{$labels.instance}} probe is taking longer than 2.5s'
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ#heading=h.xl25afvmvuba
               summary: '{{$labels.instance}} responding slowly'
             expr: |
-              avg_over_time(probe_duration_seconds[1m]) > 2
+              avg_over_time(probe_duration_seconds[1m]) > 2.5
             for: 2m
             labels:
               email_contact: global-it-operations@greenpeace.org
@@ -61,7 +61,7 @@ additionalPrometheusRulesMap:
                 /label  ~\"Terraform Deployment\"\n HTTP probe failed
           - alert: HttpSlowRequests
             annotations:
-              description: '{{$labels.instance}} probe is taking longer than 1s'
+              description: '{{$labels.instance}} probe is taking longer than 2s'
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
