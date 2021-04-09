@@ -11,7 +11,7 @@ additionalPrometheusRulesMap:
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
-                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ#heading=h.xl25afvmvuba
+                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.475lqkazle41
               summary: '{{$labels.instance}} not responding'
             expr: |
               probe_success == 0
@@ -29,7 +29,7 @@ additionalPrometheusRulesMap:
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
-                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ#heading=h.xl25afvmvuba
+                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.9as4myvdzik2
               summary: '{{$labels.instance}} responding slowly'
             expr: |
               avg_over_time(probe_duration_seconds[1m]) > 2.5
@@ -47,7 +47,7 @@ additionalPrometheusRulesMap:
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
-                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ#heading=h.xl25afvmvuba
+                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.xorjr89c765l
               summary: '{{$labels.instance}} responding slowly'
             expr: |
               probe_http_status_code <= 199 OR probe_http_status_code >= 400
@@ -65,7 +65,7 @@ additionalPrometheusRulesMap:
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
-                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ#heading=h.xl25afvmvuba
+                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
               summary: '{{$labels.instance}} responding slowly'
             expr: |
               avg_over_time(probe_http_duration_seconds[1m]) > 2
