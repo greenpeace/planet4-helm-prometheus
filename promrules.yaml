@@ -44,14 +44,14 @@ additionalPrometheusRulesMap:
               slack_channel: p4-slack-alert
           - alert: HttpStatusCode
             annotations:
-              description: '{{$labels.instance}} probe is taking longer than 2s'
+              description: '{{$labels.instance}} probe returned an error code {{ $value }}'
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.xorjr89c765l
               summary: '{{$labels.instance}} responding slowly'
               gitlab_incident_markdown: |
-                /label  ~\"Terraform Deployment\"\n HTTP probe failed
+                /label  ~\"Terraform Deployment\"\n HTTP probe returned error {{ $value }}
             expr: |
               probe_http_status_code <= 199 OR probe_http_status_code >= 400
             for: 5m
