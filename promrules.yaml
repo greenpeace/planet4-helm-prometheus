@@ -7,7 +7,7 @@ additionalPrometheusRulesMap:
           - alert: ProbeFailed
             annotations:
               description: |-
-                {{$labels.instance}} has not responded to a ping for the last 5m
+                {{$labels.instance}} probe has failed for the last 5m
               observability_url: >-
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
@@ -51,7 +51,7 @@ additionalPrometheusRulesMap:
                 https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.xorjr89c765l
-              summary: '{{$labels.instance}} responding slowly'
+              summary: '{{$labels.instance}} returned error code {{  $value }}'
               gitlab_incident_markdown: |-
                 /label  ~\"Terraform Deployment\"\n
                 HTTP probe returned error {{ $value }}
