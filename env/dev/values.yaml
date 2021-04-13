@@ -17,6 +17,14 @@ grafana:
         hosts:
           - grafana.p4.greenpeace.org
 prometheus:
+  prometheusSpec:
+    externalLabels:
+      environment: test
+      type: cluster
+      entity: planet4
+      name: planet4-dev
+      location: gcp
+      network: vpc
   thanosIngress:
     hosts:
       - thanos.p4.greenpeace.org

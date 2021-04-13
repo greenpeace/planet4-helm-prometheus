@@ -33,13 +33,6 @@ prometheus:
         mountPath: "/certs"
         readOnly: true
     retention: 10d
-    externalLabels:
-      environment: test
-      type: cluster
-      entity: planet4
-      name: planet4-dev
-      location: gcp
-      network: vpc
     thanos:
       version: v0.18.0
       objectStorageConfig:
