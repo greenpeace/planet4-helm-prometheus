@@ -55,8 +55,8 @@ prod: lint init config-secrets-prod
 ifndef CI
 	$(error Please commit and push, this is intended to be run in a CI environment)
 endif
-	gcloud config set project $(DEV_PROJECT)
-	gcloud container clusters get-credentials $(DEV_CLUSTER) --zone $(DEV_ZONE) --project $(DEV_PROJECT)
+	gcloud config set project $(PROD_PROJECT)
+	gcloud container clusters get-credentials $(PROD_PROJECT) --zone $(PROD_ZONE) --project $(PROD_PROJECT)
 	-kubectl create namespace $(NAMESPACE)
 	kubectl apply -f secrets.yaml
 	./create_crds.sh
