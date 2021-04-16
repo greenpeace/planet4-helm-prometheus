@@ -98,15 +98,15 @@ additionalPrometheusRulesMap:
               summary: '{{$labels.instance}} PV filling up'
               gitlab_incident_markdown: |
                   /label  ~\"Terraform Deployment\"\n PV Filling Up
-              expr: >-
-                predict_linear(kubelet_volume_stats_available_bytes[6h],
-                104 * 24 * 3600) < 0
-              for: 0m
-              labels:
-                email_contact: pops@greenpeace.org
-                gitlab_project: planet4-documentation-and-issues
-                severity: critical
-                slack_channel: p4-slack-alert
+            expr: >-
+              predict_linear(kubelet_volume_stats_available_bytes[6h],
+              104 * 24 * 3600) < 0
+            for: 0m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: critical
+              slack_channel: p4-slack-alert
           - alert: KubernetesVolumeOutOfDiskSpace
             annotations:
               description: >-
@@ -122,12 +122,12 @@ additionalPrometheusRulesMap:
               summary: '{{$labels.instance}} PV running out of disk space'
               gitlab_incident_markdown: |
                   /label  ~\"Terraform Deployment\"\n PV Filling Up
-              expr: >-
-                kubelet_volume_stats_available_bytes
-                / kubelet_volume_stats_capacity_bytes * 100 < 20
-              for: 0m
-              labels:
-                email_contact: pops@greenpeace.org
-                gitlab_project: planet4-documentation-and-issues
-                severity: critical
-                slack_channel: p4-slack-alert
+            expr: >-
+              kubelet_volume_stats_available_bytes
+              / kubelet_volume_stats_capacity_bytes * 100 < 20
+            for: 0m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: critical
+              slack_channel: p4-slack-alert
