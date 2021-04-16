@@ -86,12 +86,11 @@ additionalPrometheusRulesMap:
               description: >-
                 '{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is
                 expected to fill up within four days.   Currently {{ $value |
-                humanize }}% is available.\n  VALUE = {{ $value }}\n
-                LABELS: {{ $labels }}'
+                humanize }}% is available.
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent
-                -volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-
-                name={{ $labels.name }}&var-namespace={{ $labels.namespace }}&
+                -volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name=
+                {{ $labels.name }}&var-namespace={{ $labels.namespace }}&
                 var-volume={{ $labels.persistentvolumeclaim }}
               runbook_url: >-
                   https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
@@ -114,8 +113,8 @@ additionalPrometheusRulesMap:
                  {{ $labels.instance }})
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent
-                -volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-
-                name={{ $labels.name }}&var-namespace={{ $labels.namespace }}&
+                -volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name=
+                {{ $labels.name }}&var-namespace={{ $labels.namespace }}&
                 var-volume={{ $labels.persistentvolumeclaim }}
               runbook_url: >-
                   https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
