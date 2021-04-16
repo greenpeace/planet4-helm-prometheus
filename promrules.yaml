@@ -83,7 +83,7 @@ additionalPrometheusRulesMap:
               slack_channel: p4-slack-alert
           - alert: KubernetesVolumeFullInFourDays
             annotations:
-              description: >
+              description: |-
                 '{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is
                 expected to fill up within four days.   Currently {{ $value |
                 humanize }}% is available.\n  VALUE = {{ $value }}\n
@@ -109,7 +109,7 @@ additionalPrometheusRulesMap:
                 slack_channel: p4-slack-alert
           - alert: KubernetesVolumeOutOfDiskSpace
             annotations:
-              description: >
+              description: |-
                 Kubernetes Volume out of disk space (instance
                  {{ $labels.instance }})
               observability_url: >-
@@ -123,8 +123,8 @@ additionalPrometheusRulesMap:
               gitlab_incident_markdown: |
                   /label  ~\"Terraform Deployment\"\n PV Filling Up
               expr: |
-                kubelet_volume_stats_available_bytes /
-                 kubelet_volume_stats_capacity_bytes * 100 < 20
+                kubelet_volume_stats_available_bytes 
+                / kubelet_volume_stats_capacity_bytes * 100 < 20
               for: 0m
               labels:
                 email_contact: pops@greenpeace.org
