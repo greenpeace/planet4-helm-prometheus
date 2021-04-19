@@ -81,7 +81,7 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: medium
               slack_channel: p4-slack-alert
-          - alert: KubernetesVolumeFullInFourDays
+          - alert: PVCFullInFourDays
             annotations:
               description: >-
                 '{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is
@@ -90,11 +90,11 @@ additionalPrometheusRulesMap:
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent
                 -volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name=
-                {{ $labels.name }}&var-namespace={{ $labels.namespace }}&
+                {{ $externalLabels.name }}&var-namespace={{ $labels.namespace }}&
                 var-volume={{ $labels.persistentvolumeclaim }}
               runbook_url: >-
                   https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
-              summary: '{{$labels.instance}} PV filling up'
+              summary: '{{$labels.persistentvolumeclaim}} PV filling up'
               gitlab_incident_markdown: |
                   /label  ~\"Terraform Deployment\"\n PV Filling Up
             expr: >-
@@ -110,11 +110,11 @@ additionalPrometheusRulesMap:
             annotations:
               description: >-
                 Kubernetes Volume out of disk space (instance
-                 {{ $labels.instance }})
+                {{ $labels.persistentvolumeclaim }})
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent
                 -volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name=
-                {{ $labels.name }}&var-namespace={{ $labels.namespace }}&
+                {{ $externalLabels.name }}&var-namespace={{ $labels.namespace }}&
                 var-volume={{ $labels.persistentvolumeclaim }}
               runbook_url: >-
                   https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
