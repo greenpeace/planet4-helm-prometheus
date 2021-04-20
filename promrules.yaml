@@ -7,9 +7,9 @@ additionalPrometheusRulesMap:
           - alert: ProbeFailed
             annotations:
               description: |-
-                {{$labels.instance}} probe has failed for the last 5m
+                {{$labels.instance}} probe has failed for the last 2m
               observability_url: >-
-                https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.475lqkazle41
               summary: '{{$labels.instance}} not responding'
@@ -19,16 +19,16 @@ additionalPrometheusRulesMap:
               probe_success == 0
             for: 2m
             labels:
-              email_contact: global-it-operations@greenpeace.org
+              email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
-              severity: warning
+              severity: critical
               slack_channel: p4-slack-alert
           - alert: SlowProbe
             annotations:
               description: |-
                 {{$labels.instance}} probe is taking longer than 2.5s
               observability_url: >-
-                https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.9as4myvdzik2
               summary: '{{$labels.instance}} responding slowly'
@@ -38,9 +38,9 @@ additionalPrometheusRulesMap:
               avg_over_time(probe_duration_seconds[1m]) > 2.5
             for: 2m
             labels:
-              email_contact: global-it-operations@greenpeace.org
+              email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
-              severity: warning
+              severity: high
               slack_channel: p4-slack-alert
           - alert: HttpStatusCode
             annotations:
@@ -48,7 +48,7 @@ additionalPrometheusRulesMap:
                 {{$labels.instance}} probe returned
                 an error code {{ $value }}
               observability_url: >-
-                https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.xorjr89c765l
               summary: '{{$labels.instance}} returned error code {{  $value }}'
@@ -57,17 +57,17 @@ additionalPrometheusRulesMap:
                 HTTP probe returned error {{ $value }}
             expr: |
               probe_http_status_code <= 199 OR probe_http_status_code >= 400
-            for: 5m
+            for: 2m
             labels:
-              email_contact: global-it-operations@greenpeace.org
+              email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
-              severity: warning
+              severity: critical
               slack_channel: p4-slack-alert
           - alert: HttpSlowRequests
             annotations:
               description: '{{$labels.instance}} probe is taking longer than 2s'
               observability_url: >-
-                https://grafana.greenpeace.org/d/_nw9AwwMz/probe-monitoring-global?orgId=1&var-target={{$labels.instance}}
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
               summary: '{{$labels.instance}} responding slowly'
@@ -75,9 +75,52 @@ additionalPrometheusRulesMap:
                  /label  ~\"Terraform Deployment\"\n HTTP probe slow
             expr: |
               avg_over_time(probe_http_duration_seconds[1m]) > 2
+            for: 2m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: medium
+              slack_channel: p4-slack-alert
+          - alert: PVCFullInFourDays
+            annotations:
+              description: >-
+                '{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is
+                expected to fill up within four days.   Currently {{ $value |
+                humanize }}% is available.
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              runbook_url: >-
+                  https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
+              summary: '{{$labels.persistentvolumeclaim}} PV filling up'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n PV Filling Up
+            expr: >-
+              predict_linear(kubelet_volume_stats_available_bytes[24h],
+              104 * 24 * 3600) < 0
+            for: 0m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: high
+              slack_channel: p4-slack-alert
+          - alert: KubernetesVolumeOutOfDiskSpace
+            annotations:
+              description: >-
+                Kubernetes Volume out of disk space (instance
+                {{ $labels.persistentvolumeclaim }})
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              runbook_url: >-
+                  https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
+              summary: '{{$labels.instance}} PV running out of disk space'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n PV Filling Up
+            expr: >-
+              kubelet_volume_stats_available_bytes
+              / kubelet_volume_stats_capacity_bytes * 100 < 20
             for: 5m
             labels:
-              email_contact: global-it-operations@greenpeace.org
+              email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
-              severity: warning
+              severity: high
               slack_channel: p4-slack-alert
