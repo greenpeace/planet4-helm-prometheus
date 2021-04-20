@@ -95,13 +95,13 @@ additionalPrometheusRulesMap:
               gitlab_incident_markdown: |
                   /label  ~\"Terraform Deployment\"\n PV Filling Up
             expr: >-
-              predict_linear(kubelet_volume_stats_available_bytes[6h],
+              predict_linear(kubelet_volume_stats_available_bytes[24h],
               104 * 24 * 3600) < 0
             for: 0m
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
-              severity: critical
+              severity: high
               slack_channel: p4-slack-alert
           - alert: KubernetesVolumeOutOfDiskSpace
             annotations:
@@ -122,5 +122,5 @@ additionalPrometheusRulesMap:
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
-              severity: critical
+              severity: high
               slack_channel: p4-slack-alert
