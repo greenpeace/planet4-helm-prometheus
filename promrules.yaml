@@ -118,7 +118,7 @@ additionalPrometheusRulesMap:
             expr: >-
               kubelet_volume_stats_available_bytes
               / kubelet_volume_stats_capacity_bytes * 100 < 20
-            for: 0m
+            for: 5m
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
