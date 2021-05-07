@@ -12,10 +12,28 @@ prometheus:
           ca_file: /certs/cacerts.pem
           cert_file: /certs/tls.crt
           key_file: /certs/tls.key
-          server_name: "alertmanager-it-operations-cluster.greenpeace.net"
+          server_name: "alertmanager-0.greenpeace.net"
         static_configs:
           - targets:
-              - "alertmanager-it-operations-cluster.greenpeace.net"
+              - "alertmanager-0.greenpeace.net"
+      - scheme: https
+        tls_config:
+          ca_file: /certs/cacerts.pem
+          cert_file: /certs/tls.crt
+          key_file: /certs/tls.key
+          server_name: "alertmanager-1.greenpeace.net"
+        static_configs:
+          - targets:
+              - "alertmanager-1.greenpeace.net"
+      - scheme: https
+        tls_config:
+          ca_file: /certs/cacerts.pem
+          cert_file: /certs/tls.crt
+          key_file: /certs/tls.key
+          server_name: "alertmanager-2.greenpeace.net"
+        static_configs:
+          - targets:
+              - "alertmanager-2.greenpeace.net"
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -34,7 +52,7 @@ prometheus:
         readOnly: true
     retention: 10d
     thanos:
-      version: v0.18.0
+      version: v0.20.1
       objectStorageConfig:
         name: thanos-key
         key: objstore.yml
