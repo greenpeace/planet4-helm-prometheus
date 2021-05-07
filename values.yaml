@@ -14,8 +14,8 @@ prometheus:
           key_file: /certs/tls.key
           server_name: "alertmanager-0.greenpeace.net"
         static_configs:
-        - targets:
-          - "alertmanager-0.greenpeace.net"
+          - targets:
+              - "alertmanager-0.greenpeace.net"
       - scheme: https
         tls_config:
           ca_file: /certs/cacerts.pem
@@ -23,8 +23,8 @@ prometheus:
           key_file: /certs/tls.key
           server_name: "alertmanager-1.greenpeace.net"
         static_configs:
-        - targets:
-          - "alertmanager-1.greenpeace.net"
+          - targets:
+              - "alertmanager-1.greenpeace.net"
       - scheme: https
         tls_config:
           ca_file: /certs/cacerts.pem
@@ -32,8 +32,8 @@ prometheus:
           key_file: /certs/tls.key
           server_name: "alertmanager-2.greenpeace.net"
         static_configs:
-        - targets:
-          - "alertmanager-2.greenpeace.net"
+          - targets:
+              - "alertmanager-2.greenpeace.net"
     storageSpec:
       volumeClaimTemplate:
         spec:
