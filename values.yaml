@@ -69,12 +69,7 @@ prometheus:
       nginx.ingress.kubernetes.io/auth-tls-secret: "kube-system/thanos-tls"
 prometheusOperator:
   createCustomResource: false
-  admissionWebhooks:
-    enabled: false
-    patch:
-      enabled: false
-  tlsProxy:
-    enabled: false
+
 grafana:
   persistence:
     enabled: true
@@ -82,6 +77,15 @@ grafana:
   accessModes:
     - ReadWriteOnce
   size: 10Gi
+
+kube-state-metrics:
+  resources:
+    limits:
+      cpu: 100m
+      memory: 64Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
 
 alertmanager:
   enabled: false

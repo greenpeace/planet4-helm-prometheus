@@ -7,7 +7,7 @@ A collection of Kubernetes manifests, Grafana dashboards, and Prometheus rules t
 
 <h1>Important Notes</h1>
 
->NOT currently deployed to the production cluster.  kube-state-metrics and NewRelic in use in production.
+>This deployment integrates with grafana.greenpeace.org, so please check this following a new deployment.
 
 ***
 ### Requirements - Internal Only
@@ -17,14 +17,18 @@ A collection of Kubernetes manifests, Grafana dashboards, and Prometheus rules t
 - [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) helm chart
 
 ### Deployment
-This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/planet4-traefik)
+This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/planet4-helm-prometheus)
 
  - Commits to the develop branch trigger deployment to the development cluster.  
  - Create a PR for review to prepare for production deployment.
  - Approval and merge deploys to production.
 
 ### Usage
- - Access Grafana [here](https://grafana.p4.greenpeace.org/?orgId=1)
+ - Access Grafana:
+       [here for P4 dev](https://grafana.p4.greenpeace.org/?orgId=1)
+       [here for P4 prod](https://prod.grafana.p4.greenpeace.org/?orgId=1)
+       [here for IT Ops](https://grafana.greenpeace.org/)
+
  - Clone the repo to access makefile commands via cli that are not executed via CircleCI
    - `make status` - <em> display status of named release </em>
    - `make value` - <em> display user values followed by all values deployed </em>
