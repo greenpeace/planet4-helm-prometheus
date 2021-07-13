@@ -15,8 +15,12 @@ additionalPrometheusRulesMap:
               summary: '{{$labels.instance}} not responding'
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n Probe failed
-            expr: |
-              avg_over_time(probe_success{job="prometheus-blackbox-exporter", name="planet4-prod"} [10m])* 100 < 90
+            expr: |-
+              avg_over_time(
+                probe_success{
+                  job="prometheus-blackbox-exporter",
+                  name="planet4-prod"} [10m]
+                ) * 100 < 90
             for: 0m
             labels:
               email_contact: pops@greenpeace.org
@@ -133,9 +137,10 @@ additionalPrometheusRulesMap:
               runbook_url: >-
                   https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
               summary: '{{$labels.instance}} Elastic Search Cluster is RED'
-              gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n Elastic Search Cluster is RED
-            expr: >-
+              gitlab_incident_markdown: |-
+                  /label  ~\"Terraform Deployment\"\n
+                  Elastic Search Cluster is RED
+            expr: |-
               elasticsearch_cluster_health_status{color="red"} == 1
             for: 5m
             labels:
