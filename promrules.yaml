@@ -16,8 +16,8 @@ additionalPrometheusRulesMap:
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n Probe failed
             expr: |
-              probe_success == 0
-            for: 2m
+              avg_over_time(probe_success{job="prometheus-blackbox-exporter", name="planet4-prod"} [10m])* 100 < 90
+            for: 0m
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
@@ -118,6 +118,25 @@ additionalPrometheusRulesMap:
             expr: >-
               kubelet_volume_stats_available_bytes
               / kubelet_volume_stats_capacity_bytes * 100 < 20
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: high
+              slack_channel: p4-slack-alert
+          - alert: ElasticSearchClusterRed
+            annotations:
+              description: >-
+                Elastic Search Cluster is Red
+              observability_url: >-
+                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+              runbook_url: >-
+                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
+              summary: '{{$labels.instance}} Elastic Search Cluster is RED'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n Elastic Search Cluster is RED
+            expr: >-
+              elasticsearch_cluster_health_status{color="red"} == 1
             for: 5m
             labels:
               email_contact: pops@greenpeace.org
