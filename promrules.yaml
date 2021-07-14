@@ -12,12 +12,16 @@ additionalPrometheusRulesMap:
                 https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.475lqkazle41
-              summary: '{{$labels.instance}} not responding'
+              summary: 'A P4 instance is not responding'
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n Probe failed
-            expr: |
-              probe_success == 0
-            for: 2m
+            expr: |-
+              avg_over_time(
+                probe_success{
+                  job="prometheus-blackbox-exporter",
+                  name="planet4-prod"} [10m]
+                ) * 100 < 90
+            for: 0m
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
@@ -31,11 +35,11 @@ additionalPrometheusRulesMap:
                 https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.9as4myvdzik2
-              summary: '{{$labels.instance}} responding slowly'
+              summary: 'A P4 probe is responding slowly'
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n Probe slow
             expr: |
-              avg_over_time(probe_duration_seconds[1m]) > 2.5
+              avg_over_time(probe_duration_seconds[1m]) > 3
             for: 2m
             labels:
               email_contact: pops@greenpeace.org
@@ -51,7 +55,7 @@ additionalPrometheusRulesMap:
                 https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.xorjr89c765l
-              summary: '{{$labels.instance}} returned error code {{  $value }}'
+              summary: 'A P4 instance returned an invalid HTTP status'
               gitlab_incident_markdown: |-
                 /label  ~\"Terraform Deployment\"\n
                 HTTP probe returned error {{ $value }}
@@ -70,7 +74,7 @@ additionalPrometheusRulesMap:
                 https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
-              summary: '{{$labels.instance}} responding slowly'
+              summary: 'A P4 instance is responding slowly'
               gitlab_incident_markdown: |
                  /label  ~\"Terraform Deployment\"\n HTTP probe slow
             expr: |
@@ -91,7 +95,7 @@ additionalPrometheusRulesMap:
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
               runbook_url: >-
                   https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
-              summary: '{{$labels.persistentvolumeclaim}} PV filling up'
+              summary: 'PV filling up'
               gitlab_incident_markdown: |
                   /label  ~\"Terraform Deployment\"\n PV Filling Up
             expr: >-
@@ -112,12 +116,52 @@ additionalPrometheusRulesMap:
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
               runbook_url: >-
                   https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
-              summary: '{{$labels.instance}} PV running out of disk space'
+              summary: 'PV running out of disk space'
               gitlab_incident_markdown: |
                   /label  ~\"Terraform Deployment\"\n PV Filling Up
             expr: >-
               kubelet_volume_stats_available_bytes
               / kubelet_volume_stats_capacity_bytes * 100 < 20
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: high
+              slack_channel: p4-slack-alert
+          - alert: ElasticSearchClusterRed
+            annotations:
+              description: >-
+                Elastic Search Cluster is Red
+              observability_url: >-
+                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+              runbook_url: >-
+                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
+              summary: 'An Elastic Search Cluster is RED'
+              gitlab_incident_markdown: |-
+                  /label  ~\"Terraform Deployment\"\n
+                  Elastic Search Cluster is RED
+            expr: |-
+              elasticsearch_cluster_health_status{color="red"} == 1
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: high
+              slack_channel: p4-slack-alert
+          - alert: ElasticSearchClusterYellow
+            annotations:
+              description: >-
+                Elastic Search Cluster is Yellow
+              observability_url: >-
+                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+              runbook_url: >-
+                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
+              summary: 'An Elastic Search Cluster is YELLOW'
+              gitlab_incident_markdown: |-
+                  /label  ~\"Terraform Deployment\"\n
+                  Elastic Search Cluster is YELLOW
+            expr: |-
+              elasticsearch_cluster_health_status{color="yellow"} == 1
             for: 5m
             labels:
               email_contact: pops@greenpeace.org

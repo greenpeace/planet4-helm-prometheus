@@ -4,7 +4,7 @@ RELEASE := prometheus-stack
 NAMESPACE := kube-system
 
 CHART_NAME := prometheus-community/kube-prometheus-stack
-CHART_VERSION ?= 10.3.2
+CHART_VERSION ?= 16.12.2
 
 DEV_CLUSTER ?= p4-development
 DEV_PROJECT ?= planet-4-151612
