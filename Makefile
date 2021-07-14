@@ -64,7 +64,8 @@ endif
 		--namespace=$(NAMESPACE) \
 		--version $(CHART_VERSION) \
 		--set grafana.adminPassword=$(PROD_GRAFANA_PW) \
-		-f values.yaml \
+		--values values.yaml \
+		--values promrules.yaml \
 		--values env/prod/values.yaml \
 		$(CHART_NAME)
 	$(MAKE) history
