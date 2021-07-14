@@ -71,12 +71,14 @@ prometheusOperator:
   createCustomResource: false
 
 grafana:
+  deploymentStrategy:
+    type: Recreate
   persistence:
     enabled: true
   # storageClassName: default
-  accessModes:
-    - ReadWriteOnce
-  size: 10Gi
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
 
 kube-state-metrics:
   resources:
