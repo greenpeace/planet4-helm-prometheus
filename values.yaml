@@ -75,7 +75,7 @@ grafana:
     type: Recreate
   persistence:
     enabled: true
-  # storageClassName: default
+    # storageClassName: default
     accessModes:
       - ReadWriteOnce
     size: 10Gi
@@ -91,3 +91,18 @@ kube-state-metrics:
 
 alertmanager:
   enabled: false
+
+defaultRules:
+  create: true
+  rules:
+    # GKE doesn't deploy a kubeScheduler
+    kubeScheduler: false
+
+kubeControllerManager:
+  enabled: false
+
+coreDns:
+  enabled: false
+
+kubeDns:
+  enabled: true
