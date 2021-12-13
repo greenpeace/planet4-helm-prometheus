@@ -58,6 +58,7 @@ prometheus:
         key: objstore.yml
   thanosIngress:
     enabled: true
+    pathType: ImplementationSpecific
     annotations:
       nginx.ingress.kubernetes.io/backend-protocol: GRPC
       nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
