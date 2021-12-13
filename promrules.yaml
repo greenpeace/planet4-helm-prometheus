@@ -38,8 +38,10 @@ additionalPrometheusRulesMap:
               summary: 'A P4 probe is responding slowly'
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n Probe slow
-            expr: |
-              (probe_success == 1) and (avg_over_time(probe_duration_seconds[1m]) > 2.5)
+            expr: >-
+              (probe_success == 1) and (
+                avg_over_time(probe_duration_seconds[1m]) > 2.5
+              )
             for: 2m
             labels:
               email_contact: pops@greenpeace.org
@@ -66,24 +68,6 @@ additionalPrometheusRulesMap:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
               severity: critical
-              slack_channel: p4-slack-alert
-          - alert: HttpSlowRequests
-            annotations:
-              description: '{{$labels.instance}} probe is taking longer than 2s'
-              observability_url: >-
-                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
-              runbook_url: >-
-                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
-              summary: 'A P4 instance is responding slowly'
-              gitlab_incident_markdown: |
-                 /label  ~\"Terraform Deployment\"\n HTTP probe slow
-            expr: |
-              avg_over_time(probe_http_duration_seconds[1m]) > 2
-            for: 2m
-            labels:
-              email_contact: pops@greenpeace.org
-              gitlab_project: planet4-documentation-and-issues
-              severity: medium
               slack_channel: p4-slack-alert
           - alert: KubernetesVolumeOutOfDiskSpace
             annotations:
