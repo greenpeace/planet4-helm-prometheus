@@ -30,7 +30,7 @@ additionalPrometheusRulesMap:
           - alert: SlowProbe
             annotations:
               description: |-
-                {{$labels.instance}} probe is taking longer than 2.5s
+                {{$labels.instance}} probe is taking {{$value}} seconds to response
               observability_url: >-
                 https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
@@ -39,9 +39,10 @@ additionalPrometheusRulesMap:
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n Probe slow
             expr: >-
-              (probe_success == 1) and (
-                avg_over_time(probe_duration_seconds[1m]) > 2.5
-              )
+              ((probe_success == 1) 
+              and 
+              (avg_over_time(probe_duration_seconds[1m]) > 2.5)) 
+              * probe_duration_seconds
             for: 2m
             labels:
               email_contact: pops@greenpeace.org
