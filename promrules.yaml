@@ -4,27 +4,6 @@ additionalPrometheusRulesMap:
     groups:
       - name: p4_websites
         rules:
-          - alert: ProbeFailed
-            annotations:
-              description: |-
-                {{$labels.instance}} probe has failed for the last 2m
-              observability_url: >-
-                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
-              runbook_url: >-
-                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.475lqkazle41
-              summary: 'A P4 instance is not responding'
-              gitlab_incident_markdown: |
-                /label  ~\"Terraform Deployment\"\n Probe failed
-            expr: |-
-              avg_over_time(
-                probe_success{job="prometheus-blackbox-exporter"}[10m]
-              ) * 100 < 90
-            for: 0m
-            labels:
-              email_contact: pops@greenpeace.org
-              gitlab_project: planet4-documentation-and-issues
-              severity: critical
-              slack_channel: p4-slack-alert
           - alert: SlowProbe
             annotations:
               description: |-
