@@ -42,6 +42,12 @@ prometheus:
           resources:
             requests:
               storage: 40Gi
+    resources:
+      requests:
+        cpu: 2500m
+        memory: 5Gi
+      limits:
+        cpu: 4000m
     volumes:
       - name: certs
         secret:
