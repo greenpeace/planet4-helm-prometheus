@@ -27,8 +27,6 @@ prometheus:
   thanosIngress:
     hosts:
       - thanos.p4.greenpeace.org
-    annotations:
-      kubernetes.io/ingress.class: nginx
     tls:
       - secretName: thanos-tls
         hosts:
