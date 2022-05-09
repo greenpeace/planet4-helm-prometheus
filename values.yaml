@@ -64,6 +64,7 @@ prometheus:
         key: objstore.yml
   thanosIngress:
     enabled: true
+    ingressClassName: redirects-nginx
     pathType: ImplementationSpecific
     annotations:
       nginx.ingress.kubernetes.io/backend-protocol: GRPC
