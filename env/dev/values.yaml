@@ -26,10 +26,8 @@ prometheus:
       gp_location: gcp
   thanosIngress:
     hosts:
-      - thanos.p4.greenpeace.org
-    annotations:
-      kubernetes.io/ingress.class: nginx
+      - dev.thanos.p4.greenpeace.org
     tls:
       - secretName: thanos-tls
         hosts:
-          - thanos.p4.greenpeace.org
+          - dev.thanos.p4.greenpeace.org
