@@ -6,6 +6,15 @@ prometheus:
         protocol: TCP
         port: 10901
   prometheusSpec:
+    remoteWrite:
+      - url: https://mimir.greenpeace.org/api/v1/push
+        headers:
+          X-Scope-OrgID: "1"
+        tlsConfig:
+          caFile: /certs/cacerts.pem
+          certFile: /certs/tls.crt
+          keyFile: /certs/tls.key
+          serverName: "mimir.greenpeace.org"
     additionalAlertManagerConfigs:
       - scheme: https
         tls_config:
