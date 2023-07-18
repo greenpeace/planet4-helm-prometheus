@@ -112,3 +112,17 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: medium
               slack_channel: p4-slack-alert
+          - alert: ProbeFailed
+            annotations:
+              observability_url: >-
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
+              summary: 'probe failed (instance {{ $labels.instance }})'
+              gitlab_incident_markdown: |-
+                  /label  ~\"Terraform Deployment\"\n
+            expr: |-
+              probe_success == 0
+            for: 0m
+            labels:
+              gitlab_project: planet4-documentation-and-issues
+              severity: medium
+              slack_channel: p4-slack-alert
