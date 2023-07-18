@@ -126,4 +126,3 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: medium
               slack_channel: p4-slack-alert
-              
