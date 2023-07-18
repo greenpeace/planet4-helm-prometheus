@@ -130,7 +130,7 @@ additionalPrometheusRulesMap:
             annotations:
               observability_url: >-
                 https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
-              summary: 'Kubernetes Pod not healthy (instance {{ $labels.instance }})'
+              summary: 'Kubernetes Pod not healthy'
               gitlab_incident_markdown: |-
                   /label  ~\"Terraform Deployment\"\n
             expr: |-
