@@ -139,7 +139,7 @@ additionalPrometheusRulesMap:
                  phase=~"Pending|Unknown|Failed"
                }
               ) > 0
-            for: 15m
+            for: 1m
             labels:
               gitlab_project: planet4-documentation-and-issues
               severity: critical
