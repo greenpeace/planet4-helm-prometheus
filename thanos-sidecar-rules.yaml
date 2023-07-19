@@ -8,16 +8,19 @@ additionalPrometheusRulesMap:
             annotations:
               description: |-
                 "Thanos Compact {{$labels.job}} has not uploaded anything
-                 for 24 hours.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+                for 24 hours."
               observability_url: >-
                 https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
-              runbook_url: >-
-                https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.9as4myvdzik2
-              summary: 'Thanos Compact Has Not Run (instance {{ $labels.instance }})'
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n Probe slow
             expr: >-
-              (time() - max by (job) (max_over_time(thanos_objstore_bucket_last_successful_upload_time{job=~".*thanos-compact.*"}[24h]))) / 60 / 60 > 24
+              (
+                time() - max by (job) (
+                  max_over_time(
+                    thanos_objstore_bucket_last_successful_upload_time{job=~".*thanos-compact.*"}[24h]
+                  )
+                )
+              ) / 60 / 60 > 24
             for: 0m
             labels:
               email_contact: pops@greenpeace.org
