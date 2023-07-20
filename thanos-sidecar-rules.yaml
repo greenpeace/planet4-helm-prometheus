@@ -118,6 +118,5 @@ additionalPrometheusRulesMap:
               slack_channel: "p4-slack-alert,planet4-test"
             annotations:
               summary: "Test Alert: This is a test alert!"
-              description: "This is a test alert generated for verification purposes."
-
+              description: "test alert generated for verification purposes."
 
