@@ -148,7 +148,7 @@ additionalPrometheusRulesMap:
               gitlab_incident_markdown: |-
                   /label  ~\"Terraform Deployment\"\n
             expr: |-
-               avg by (exported_namespace, namespace, name) (
+              avg by (exported_namespace, namespace, name) (
                 certmanager_certificate_expiration_timestamp_seconds - time()
               ) < (21 * 24 * 3600)
             for: 1h
@@ -156,4 +156,3 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: Warning
               slack_channel: p4-slack-alert
-
