@@ -44,6 +44,7 @@ endif
 		--values values.yaml \
 		--values promrules.yaml \
 		--values thanos-sidecar-rules.yaml \
+		--values kube-rules.yaml \
 		--values env/dev/values.yaml \
 		$(CHART_NAME)
 	$(MAKE) history
