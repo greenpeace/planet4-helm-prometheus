@@ -48,31 +48,6 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: critical
               slack_channel: p4-slack-alert
-          - alert: KubernetesVolumeOutOfDiskSpace
-            annotations:
-              description: >-
-                Kubernetes Volume out of disk space (instance
-                {{ $labels.persistentvolumeclaim }})
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              runbook_url: >-
-                  https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.89vqtjr3cb8p
-              summary: 'PV running out of disk space'
-              gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n PV Filling Up
-            expr: >-
-              (kubelet_volume_stats_capacity_bytes
-              -
-              kubelet_volume_stats_available_bytes
-              )
-              /
-              kubelet_volume_stats_capacity_bytes * 100 > 98
-            for: 5m
-            labels:
-              email_contact: pops@greenpeace.org
-              gitlab_project: planet4-documentation-and-issues
-              severity: high
-              slack_channel: p4-slack-alert
           - alert: ElasticSearchClusterRed
             annotations:
               description: >-
@@ -112,35 +87,73 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: medium
               slack_channel: p4-slack-alert
-          - alert: ProbeFailed
+      - name: nginx_ingress
+        rules:
+          - alert: NginxHighHttp4xxErrorRate
             annotations:
+              description: >-
+                Too many HTTP requests with status 4xx
               observability_url: >-
-                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
-              summary: 'probe failed (instance {{ $labels.instance }})'
+                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+              runbook_url: >-
+                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
+              summary: 'Nginx high HTTP 4xx error rate'
               gitlab_incident_markdown: |-
                   /label  ~\"Terraform Deployment\"\n
             expr: |-
-              probe_success == 0
-            for: 0m
+              sum(rate(nginx_http_requests_total{
+                status=~"^4.."
+                }[1m]))
+                /
+              sum(rate(nginx_http_requests_total[1m])) * 100 > 5
+            for: 5m
             labels:
               gitlab_project: planet4-documentation-and-issues
-              severity: medium
+              severity: Critical
               slack_channel: p4-slack-alert
-          - alert: KubernetesPodNotHealthy
+          - alert: NginxHighHttp5xxErrorRate
             annotations:
+              description: >-
+                Too many HTTP requests with status 5xx
               observability_url: >-
-                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
-              summary: 'Kubernetes Pod not healthy'
+                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+              runbook_url: >-
+                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
+              summary: 'Nginx high HTTP 5xx error rate'
               gitlab_incident_markdown: |-
                   /label  ~\"Terraform Deployment\"\n
             expr: |-
-              sum by (namespace, pod) (
-               kube_pod_status_phase{
-                 phase=~"Pending|Unknown|Failed"
-               }
-              ) > 0
-            for: 1m
+              sum(rate(nginx_http_requests_total{
+                status=~"^5.."
+                }[1m]))
+                /
+              sum(rate(nginx_http_requests_total[1m])) * 100 > 5
+            for: 5m
             labels:
               gitlab_project: planet4-documentation-and-issues
-              severity: critical
+              severity: Critical
               slack_channel: p4-slack-alert
+      - name: cert_manager
+        rules:
+          - alert: CertManagerCertExpirySoon
+            annotations:
+              description: >-
+                this cert covers will be unavailable after
+                {{ $value | humanizeDuration }}.
+              observability_url: >-
+                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+              runbook_url: >-
+                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
+              summary: 'cert should have renewed over a week ago.'
+              gitlab_incident_markdown: |-
+                  /label  ~\"Terraform Deployment\"\n
+            expr: |-
+               avg by (exported_namespace, namespace, name) (
+                certmanager_certificate_expiration_timestamp_seconds - time()
+              ) < (21 * 24 * 3600)
+            for: 1h
+            labels:
+              gitlab_project: planet4-documentation-and-issues
+              severity: Warning
+              slack_channel: p4-slack-alert
+

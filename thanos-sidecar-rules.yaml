@@ -2,7 +2,7 @@
 additionalPrometheusRulesMap:
   planet4:
     groups:
-      - name: p4_websites
+      - name: thanos_sidecar
         rules:
           - alert: ThanosCompactHasNotRun
             annotations:
@@ -109,13 +109,26 @@ additionalPrometheusRulesMap:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
               severity: critical
-              slack_channel: "p4-slack-alert,planet4-test"
-          - alert: TestAlert
-            expr: 1
-            for: 1m
-            labels:
-              severity: test
-              slack_channel: test-p4
+              slack_channel: p4-slack-alert
+          - alert: ThanosSidecarIsDown
             annotations:
-              summary: "Test Alert: This is a test alert!"
-              description: "test alert generated for verification purposes."
+              description: |-
+                ThanosSidecar has disappeared.
+                Prometheus target for the component cannot be discovered.
+                VALUE = {{ $value }}
+                LABELS = {{ $labels }}
+              observability_url: >-
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
+              summary: |-
+                Thanos Sidecar Is Down
+                (instance {{ $labels.instance }})
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe slow
+            expr: >-
+              absent(up{job=~".*thanos-sidecar.*"} == 1)
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: critical
+              slack_channel: p4-slack-alert
