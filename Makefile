@@ -43,7 +43,6 @@ endif
 		--set grafana.adminPassword=$(DEV_GRAFANA_PW) \
 		--values values.yaml \
 		--values promrules.yaml \
-		--values thanos-sidecar-rules.yaml \
 		--values env/dev/values.yaml \
 		$(CHART_NAME)
 	$(MAKE) history

@@ -156,3 +156,333 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: Warning
               slack_channel: p4-slack-alert
+      - name: thanos_sidecar
+        rules:
+          - alert: ThanosCompactHasNotRun
+            annotations:
+              description: |-
+                "Thanos Compact {{$labels.job}} has not uploaded anything
+                for 24 hours."
+              observability_url: >-
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe slow
+            expr: >-
+              (
+                time() - max by (job) (
+                  max_over_time(
+                    thanos_objstore_bucket_last_successful_upload_time{job=~".*thanos-compact.*"}[24h]
+                  )
+                )
+              ) / 60 / 60 > 24
+            for: 0m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: critical
+              slack_channel: p4-slack-alert
+          - alert: ThanosQueryHttpRequestQueryErrorRateHigh
+            annotations:
+              description: |-
+                "Thanos Query {{$labels.job}} is failing to handle
+                {{$value | humanize}}% of "query" requests.\n
+                VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+              observability_url: >-
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe slow
+            expr: >-
+              (
+                sum by (job) (
+                  rate(http_requests_total{
+                    code=~"5..",
+                    job=~".*thanos-query.*",
+                    handler="query"
+                  }[5m])
+                ) /
+                sum by (job) (
+                  rate(http_requests_total{
+                    job=~".*thanos-query.*",
+                    handler="query"
+                  }[5m])
+                )
+              ) * 100 > 5
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: critical
+              slack_channel: p4-slack-alert
+          - alert: ThanosSidecarBucketOperationsFailed
+            annotations:
+              description: |-
+                Thanos Sidecar {{$labels.instance}}
+                bucket operations are failing.
+                VALUE = {{ $value }}
+                LABELS = {{ $labels }}
+              observability_url: >-
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
+              summary: |-
+                Thanos Sidecar Bucket Ops
+                Failed (instance {{ $labels.instance }})
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe slow
+            expr: >-
+              sum by (job, instance) (
+                rate(thanos_objstore_bucket_operation_failures_total{
+                  job=~".*thanos-sidecar.*"
+                }[5m])
+              ) > 0
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: critical
+              slack_channel: p4-slack-alert
+          - alert: ThanosSidecarNoConnectionToStartedPrometheus
+            annotations:
+              description: |-
+                Thanos Sidecar {{$labels.instance}} is unhealthy.
+                VALUE = {{ $value }}
+                LABELS = {{ $labels }}
+              observability_url: >-
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
+              summary: |-
+                Thanos Sidecar No Connection
+                To Started Prometheus (instance {{ $labels.instance }})
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe slow
+            expr: >-
+              thanos_sidecar_prometheus_up{
+                job=~".*thanos-sidecar.*"
+                } == 0
+              and on (namespace, pod)
+              prometheus_tsdb_data_replay_duration_seconds != 0
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: critical
+              slack_channel: p4-slack-alert
+          - alert: ThanosSidecarIsDown
+            annotations:
+              description: |-
+                ThanosSidecar has disappeared.
+                Prometheus target for the component cannot be discovered.
+                VALUE = {{ $value }}
+                LABELS = {{ $labels }}
+              observability_url: >-
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
+              summary: |-
+                Thanos Sidecar Is Down
+                (instance {{ $labels.instance }})
+              gitlab_incident_markdown: |
+                /label  ~\"Terraform Deployment\"\n Probe slow
+            expr: >-
+              absent(up{job=~".*thanos-sidecar.*"} == 1)
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: critical
+              slack_channel: p4-slack-alert
+      - name: kube_rules
+        rules:
+          - alert: KubernetesPodNotHealthy
+            annotations:
+              observability_url: >-
+                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
+              summary: 'Kubernetes Pod not healthy'
+              gitlab_incident_markdown: |-
+                  /label  ~\"Terraform Deployment\"\n
+            expr: |-
+              sum by (namespace, pod) (
+               kube_pod_status_phase{
+                 phase=~"Pending|Unknown|Failed"
+               }
+              ) > 0
+            for: 1m
+            labels:
+              gitlab_project: planet4-documentation-and-issues
+              severity: critical
+              slack_channel: p4-slack-alert
+          - alert: KubernetesVolumeOutOfDiskSpace
+            annotations:
+              description: >-
+                Kubernetes Volume out of disk space (instance
+                {{ $labels.persistentvolumeclaim }})
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              summary: 'PV running out of disk space'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n Out of Disk space
+            expr: >-
+              (kubelet_volume_stats_capacity_bytes
+              -
+              kubelet_volume_stats_available_bytes
+              )
+              /
+              kubelet_volume_stats_capacity_bytes * 100 > 98
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: high
+              slack_channel: p4-slack-alert
+          - alert: KubernetesNodeNotReady
+            annotations:
+              description: >-
+                Kubernetes node not ready
+                (instance {{ $labels.instance }})
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              summary: 'Kubernetes node not ready'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n node not ready
+            expr: >-
+               kube_node_status_condition{
+                condition="Ready",
+                status="true"
+                } == 0
+            for: 5m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: high
+              slack_channel: p4-slack-alert
+          - alert: KubernetesContainerOomKiller
+            annotations:
+              description: >-
+                Container in pod is OOMKilled
+                (instance {{ $labels.instance }})
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              summary: 'Kubernetes container oom killer'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n pod OOMKilled
+            expr: >-
+               (
+                kube_pod_container_status_restarts_total
+                 -
+                kube_pod_container_status_restarts_total offset 10m >= 1
+                ) and ignoring (reason) min_over_time(
+                  kube_pod_container_status_last_terminated_reason{
+                    reason="OOMKilled"
+                    }[10m]
+                  ) == 1
+            for: 0m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: high
+              slack_channel: p4-slack-alert
+          - alert: KubernetesPersistentvolumeclaimPending
+            annotations:
+              description: >-
+                PersistentVolumeClaim
+                (instance {{ $labels.instance }})
+                VALUE = {{ $value }}
+                LABELS = {{ $labels }}
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              summary: 'Kubernetes PersistentVolumeClaim pending'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n PVC pending
+            expr: >-
+               kube_persistentvolumeclaim_status_phase{
+                phase="Pending"
+                } == 1
+            for: 2m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: Warning
+              slack_channel: p4-slack-alert
+          - alert: KubernetesPersistentvolumeError
+            annotations:
+              description: >-
+                Kubernetes PersistentVolume error
+                (instance {{ $labels.instance }})
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              summary: 'Kubernetes PersistentVolume error'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n PVC Error
+            expr: >-
+               kube_persistentvolume_status_phase{
+                  phase=~"Failed|Pending",
+                  job="kube-state-metrics"
+                } > 0
+            for: 2m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: Critical
+              slack_channel: p4-slack-alert
+          - alert: KubernetesPodCrashLooping
+            annotations:
+              description: >-
+                Pod is crashlooping
+                VALUE = {{ $value }}
+                LABELS = {{ $labels }}
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              summary: 'Kubernetes pod crash looping'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n pod crashlooping
+            expr: >-
+               increase(
+                kube_pod_container_status_restarts_total[1m]
+                ) > 3
+            for: 2m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: Critical
+              slack_channel: p4-slack-alert
+          - alert: KubernetesApiServerErrors
+            annotations:
+              description: >-
+                Kubernetes API server is
+                experiencing high error rate
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              summary: 'Kubernetes API server errors'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n APIServer Error
+            expr: >-
+               sum(rate(apiserver_request_total{
+                job="apiserver",
+                code=~"^(?:5..)$"
+                }[1m])) by (instance)/ sum(rate(apiserver_request_total{
+                  job="apiserver"
+                  }[1m])) by (instance) * 100 > 3
+            for: 2m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: Critical
+              slack_channel: p4-slack-alert
+          - alert: KubernetesNodeReady
+            annotations:
+              description: >-
+                Node {{ $labels.node }}
+                has been unready for a long time
+                VALUE = {{ $value }}
+                LABELS = {{ $labels }}
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              summary: 'Kubernetes Node ready'
+              gitlab_incident_markdown: |
+                  /label  ~\"Terraform Deployment\"\n
+            expr: >-
+              kube_node_status_condition{
+                condition="Ready",
+                status="true"
+                } == 0
+            for: 20m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: Critical
+              slack_channel: p4-slack-alert
