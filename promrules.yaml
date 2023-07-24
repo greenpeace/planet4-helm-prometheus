@@ -156,7 +156,6 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: Warning
               slack_channel: p4-slack-alert
-
       - name: thanos_sidecar
         rules:
           - alert: ThanosCompactHasNotRun
@@ -487,5 +486,4 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: Critical
               slack_channel: p4-slack-alert
-
 
