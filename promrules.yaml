@@ -173,7 +173,7 @@ additionalPrometheusRulesMap:
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n Probe slow
             expr: >-
-              absent(up{job="prometheus-stack-kube-prom-prometheus"} == 1)
+              absent(kube_pod_container_status_running{namespace="kube-system", pod="prometheus-prometheus-stack-kube-prom-prometheus-0", container="thanos-sidecar"} == 1)
             for: 5m
             labels:
               email_contact: pops@greenpeace.org
