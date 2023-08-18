@@ -174,7 +174,9 @@ additionalPrometheusRulesMap:
                 /label  ~\"Terraform Deployment\"\n Probe slow
             expr: >-
               absent(
-                kube_pod_container_status_running{container="thanos-sidecar"} == 1
+                kube_pod_container_status_running{
+                  container="thanos-sidecar"
+                } == 1
               )
             for: 5m
             labels:
