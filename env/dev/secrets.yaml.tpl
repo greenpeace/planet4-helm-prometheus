@@ -7,8 +7,6 @@ metadata:
 type: kubernetes.io/tls
 data:
   ca.crt: >-
-    ${DEV_THANOS_CA}
-  cacerts.pem: >-
     ${DEV_THANOS_CHAIN}
   tls.crt: >-
     ${DEV_THANOS_CRT}
