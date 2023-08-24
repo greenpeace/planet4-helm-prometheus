@@ -158,26 +158,20 @@ additionalPrometheusRulesMap:
               slack_channel: p4-slack-alert
       - name: thanos_sidecar
         rules:
-          - alert: ThanosSidecarIsDown
+          - alert: ThanosSidecarNotRunning
             annotations:
-              description: |-
-                ThanosSidecar has disappeared.
-                Prometheus target for the component cannot be discovered.
-                VALUE = {{ $value }}
-                LABELS = {{ $labels }}
+              description: >-
+                thanos-sidecar container is not running in {{$labels.cluster}}.
+                Metrics will not be uploaded to long-term storage,
+                and will be lost if not resolved before Prometheus' retention
+                period.
               observability_url: >-
-                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
-              summary: |-
-                Thanos Sidecar Is Down
-                (instance {{ $labels.instance }})
-              gitlab_incident_markdown: |
-                /label  ~\"Terraform Deployment\"\n Probe slow
+                https://grafana.greenpeace.org/goto/FQHc71gIR?orgId=1
+              summary: >-
+                Thanos sidecar container is not running in {{$labels.cluster}}.
+              gitlab_incident_markdown: ""
             expr: >-
-              absent(
-                kube_pod_container_status_running{
-                  container="thanos-sidecar"
-                } == 1
-              )
+              kube_pod_container_status_running{container="thanos-sidecar"} == 0
             for: 5m
             labels:
               email_contact: pops@greenpeace.org

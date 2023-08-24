@@ -105,6 +105,11 @@ defaultRules:
   rules:
     # GKE doesn't deploy a kubeScheduler
     kubeScheduler: false
+  disabled:
+    # If Prometheus is failing to send alerts to any Alertmanager we will not
+    # see this alert. It is therefore redundant. Instead we will be notified
+    # via the watchdog alert sent to Healthchecks.io
+    PrometheusErrorSendingAlertsToAnyAlertmanager: true
 
 kubeControllerManager:
   enabled: false
