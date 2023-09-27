@@ -274,7 +274,7 @@ additionalPrometheusRulesMap:
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
               summary: 'HPA is running at max replicas'
               gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n pod crashlooping
+                  /label  ~\"Terraform Deployment\"\n HPA maxout
             expr: >-
               kube_horizontalpodautoscaler_status_current_replicas{
                 job="kube-state-metrics"
@@ -293,11 +293,23 @@ additionalPrometheusRulesMap:
                 KubeProxy has disappeared from Prometheus target discovery.
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'Target disappeared from Prometheus target discovery.'
-              gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n pod crashlooping
             expr: >-
               absent(up{job="kube-proxy"} == 1)
+            for: 15m
+            labels:
+              email_contact: pops@greenpeace.org
+              gitlab_project: planet4-documentation-and-issues
+              severity: Critical
+              slack_channel: p4-slack-alert
+          - alert: KubeSchedulerDown
+            annotations:
+              description: >-
+                KubeScheduler has disappeared from Prometheus target discovery.
+              observability_url: >-
+                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
+              summary: 'Target disappeared from Prometheus target discovery.'
+            expr: >-
+              absent(up{job="kube-scheduler"} == 1)
             for: 15m
             labels:
               email_contact: pops@greenpeace.org
