@@ -150,7 +150,7 @@ additionalPrometheusRulesMap:
             expr: |-
               avg by (exported_namespace, namespace, name) (
                 certmanager_certificate_expiration_timestamp_seconds - time()
-              ) < (21 * 24 * 3600)
+              ) < (7 * 24 * 3600)
             for: 1h
             labels:
               gitlab_project: planet4-documentation-and-issues
@@ -198,50 +198,6 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: critical
               slack_channel: p4-slack-alert
-          - alert: KubernetesVolumeOutOfDiskSpace
-            annotations:
-              description: >-
-                Kubernetes Volume out of disk space (instance
-                {{ $labels.persistentvolumeclaim }})
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'PV running out of disk space'
-              gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n Out of Disk space
-            expr: >-
-              (kubelet_volume_stats_capacity_bytes
-              -
-              kubelet_volume_stats_available_bytes
-              )
-              /
-              kubelet_volume_stats_capacity_bytes * 100 > 98
-            for: 5m
-            labels:
-              email_contact: pops@greenpeace.org
-              gitlab_project: planet4-documentation-and-issues
-              severity: high
-              slack_channel: p4-slack-alert
-          - alert: KubernetesNodeNotReady
-            annotations:
-              description: >-
-                Kubernetes node not ready
-                (instance {{ $labels.instance }})
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'Kubernetes node not ready'
-              gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n node not ready
-            expr: >-
-               kube_node_status_condition{
-                condition="Ready",
-                status="true"
-                } == 0
-            for: 5m
-            labels:
-              email_contact: pops@greenpeace.org
-              gitlab_project: planet4-documentation-and-issues
-              severity: high
-              slack_channel: p4-slack-alert
           - alert: KubernetesContainerOomKiller
             annotations:
               description: >-
@@ -267,28 +223,6 @@ additionalPrometheusRulesMap:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
               severity: high
-              slack_channel: p4-slack-alert
-          - alert: KubernetesPersistentvolumeclaimPending
-            annotations:
-              description: >-
-                PersistentVolumeClaim
-                (instance {{ $labels.instance }})
-                VALUE = {{ $value }}
-                LABELS = {{ $labels }}
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'Kubernetes PersistentVolumeClaim pending'
-              gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n PVC pending
-            expr: >-
-               kube_persistentvolumeclaim_status_phase{
-                phase="Pending"
-                } == 1
-            for: 2m
-            labels:
-              email_contact: pops@greenpeace.org
-              gitlab_project: planet4-documentation-and-issues
-              severity: Warning
               slack_channel: p4-slack-alert
           - alert: KubernetesPersistentvolumeError
             annotations:
@@ -332,47 +266,39 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: Critical
               slack_channel: p4-slack-alert
-          - alert: KubernetesApiServerErrors
+          - alert: KubeHpaMaxedOut
             annotations:
               description: >-
-                Kubernetes API server is
-                experiencing high error rate
+                HPA is running at max replicas
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'Kubernetes API server errors'
+              summary: 'HPA is running at max replicas'
               gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n APIServer Error
+                  /label  ~\"Terraform Deployment\"\n pod crashlooping
             expr: >-
-               sum(rate(apiserver_request_total{
-                job="apiserver",
-                code=~"^(?:5..)$"
-                }[1m])) by (instance)/ sum(rate(apiserver_request_total{
-                  job="apiserver"
-                  }[1m])) by (instance) * 100 > 3
-            for: 2m
+              kube_horizontalpodautoscaler_status_current_replicas{
+                job="kube-state-metrics"
+                } == kube_horizontalpodautoscaler_spec_max_replicas{
+                  job="kube-state-metrics"
+                }
+            for: 15m
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
               severity: Critical
               slack_channel: p4-slack-alert
-          - alert: KubernetesNodeReady
+          - alert: KubeProxyDown
             annotations:
               description: >-
-                Node {{ $labels.node }}
-                has been unready for a long time
-                VALUE = {{ $value }}
-                LABELS = {{ $labels }}
+                KubeProxy has disappeared from Prometheus target discovery.
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'Kubernetes Node ready'
+              summary: 'Target disappeared from Prometheus target discovery.'
               gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n
+                  /label  ~\"Terraform Deployment\"\n pod crashlooping
             expr: >-
-              kube_node_status_condition{
-                condition="Ready",
-                status="true"
-                } == 0
-            for: 20m
+              absent(up{job="kube-proxy"} == 1)
+            for: 15m
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
