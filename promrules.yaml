@@ -2,7 +2,7 @@
 additionalPrometheusRulesMap:
   planet4:
     groups:
-      - name: p4_websites
+      - name: P4Probes
         rules:
           - alert: SlowProbe
             annotations:
@@ -13,7 +13,7 @@ additionalPrometheusRulesMap:
                 https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.9as4myvdzik2
-              summary: 'A P4 probe is responding slowly'
+              summary: "A P4 probe is responding slowly"
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n Probe slow
             expr: >-
@@ -27,16 +27,15 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: high
               slack_channel: p4-slack-alert
-          - alert: HttpStatusCode
+          - alert: ProbeHTTPErrorCode
             annotations:
               description: |-
-                {{$labels.instance}} probe returned
-                an error code {{ $value }}
+                {{$labels.instance}} probe returned a {{$value}} error code.
               observability_url: >-
                 https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
               runbook_url: >-
                 https://docs.google.com/document/d/1YgbkEDgENyxJ67QZ5VeVTh-uZfv8UCKvDGv553CvqBQ/edit#bookmark=id.xorjr89c765l
-              summary: 'A P4 instance returned an invalid HTTP status'
+              summary: "A P4 instance returned an invalid HTTP status code"
               gitlab_incident_markdown: |-
                 /label  ~\"Terraform Deployment\"\n
                 HTTP probe returned error {{ $value }}
@@ -48,6 +47,8 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: critical
               slack_channel: p4-slack-alert
+      - name: P4ElasticSearch
+        rules:
           - alert: ElasticSearchClusterRed
             annotations:
               description: >-
@@ -55,11 +56,11 @@ additionalPrometheusRulesMap:
               observability_url: >-
                 https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
               runbook_url: >-
-                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
-              summary: 'An Elastic Search Cluster is RED'
+                https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
+              summary: "An Elastic Search Cluster is RED"
               gitlab_incident_markdown: |-
-                  /label  ~\"Terraform Deployment\"\n
-                  Elastic Search Cluster is RED
+                /label  ~\"Terraform Deployment\"\n
+                Elastic Search Cluster is RED
             expr: |-
               elasticsearch_cluster_health_status{color="red"} == 1
             for: 5m
@@ -75,11 +76,11 @@ additionalPrometheusRulesMap:
               observability_url: >-
                 https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
               runbook_url: >-
-                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
-              summary: 'An Elastic Search Cluster is YELLOW'
+                https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
+              summary: "An Elastic Search Cluster is YELLOW"
               gitlab_incident_markdown: |-
-                  /label  ~\"Terraform Deployment\"\n
-                  Elastic Search Cluster is YELLOW
+                /label  ~\"Terraform Deployment\"\n
+                Elastic Search Cluster is YELLOW
             expr: |-
               elasticsearch_cluster_health_status{color="yellow"} == 1
             for: 5m
@@ -87,53 +88,41 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: medium
               slack_channel: p4-slack-alert
-      - name: nginx_ingress
+      - name: P4cert-manager
         rules:
-          - alert: NginxHighHttp4xxErrorRate
+          - alert: cert-managerCertExpiring
             annotations:
               description: >-
-                Too many HTTP requests with status 4xx
+                "Cert-manager certificate for {{$labels.name}} in {{$labels.cluster}} expires in {{$value}} days"
               observability_url: >-
-                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+                https://grafana.greenpeace.org/d/7YTxIodVz/global-certificates-overview?orgId=1
               runbook_url: >-
-                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
-              summary: 'Nginx high HTTP 4xx error rate'
-              gitlab_incident_markdown: |-
-                  /label  ~\"Terraform Deployment\"\n
-            expr: |-
-              sum(rate(nginx_http_requests_total{
-                status=~"^4.."
-                }[1m]))
-                /
-              sum(rate(nginx_http_requests_total[1m])) * 100 > 5
+                https://gitlab.greenpeace.org/gp/git/operations/infrastructure/google-cloud-platform/git-ops-k8s/cert-manager-helm-chart/-/wikis/Runbook
+              summary: TLS Certificate is going to expire.
+            expr: >-
+              floor(0 < ((min(certmanager_certificate_expiration_timestamp_seconds) by (name, cluster, issuer_name) - time()) /60/60/24 ) < 14)
             for: 5m
             labels:
               gitlab_project: planet4-documentation-and-issues
-              severity: Critical
+              severity: Warning
               slack_channel: p4-slack-alert
-          - alert: NginxHighHttp5xxErrorRate
+          - alert: cert-managerCertExpired
             annotations:
               description: >-
-                Too many HTTP requests with status 5xx
+                Cert-manager certificate for {{$labels.name}} in {{$labels.cluster}} expired {{$value}} days ago
               observability_url: >-
-                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+                https://grafana.greenpeace.org/d/7YTxIodVz/global-certificates-overview?orgId=1
               runbook_url: >-
-                  https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
-              summary: 'Nginx high HTTP 5xx error rate'
-              gitlab_incident_markdown: |-
-                  /label  ~\"Terraform Deployment\"\n
-            expr: |-
-              sum(rate(nginx_http_requests_total{
-                status=~"^5.."
-                }[1m]))
-                /
-              sum(rate(nginx_http_requests_total[1m])) * 100 > 5
+                https://gitlab.greenpeace.org/gp/git/operations/infrastructure/google-cloud-platform/git-ops-k8s/cert-manager-helm-chart/-/wikis/Runbook
+              summary: TLS Certificate is going to expire.
+            expr: >-
+              floor(abs(((min(certmanager_certificate_expiration_timestamp_seconds) by (name, cluster, issuer_name) - time()) /60/60/24 ) < 0))
             for: 5m
             labels:
               gitlab_project: planet4-documentation-and-issues
-              severity: Critical
+              severity: Warning
               slack_channel: p4-slack-alert
-      - name: thanos_sidecar
+      - name: P4ThanosSidecar
         rules:
           - alert: ThanosSidecarNotRunning
             annotations:
@@ -155,72 +144,28 @@ additionalPrometheusRulesMap:
               gitlab_project: planet4-documentation-and-issues
               severity: critical
               slack_channel: p4-slack-alert
-      - name: kube_rules
+      - name: P4KubernetesRules
         rules:
-          - alert: KubernetesPodNotHealthy
-            annotations:
-              observability_url: >-
-                https://grafana.greenpeace.org/d/na0nQDXGk/planet4-end-point-monitoring?orgId=1&var-target={{$labels.instance}}
-              summary: 'Kubernetes Pod not healthy'
-              gitlab_incident_markdown: |-
-                  /label  ~\"Terraform Deployment\"\n
-            expr: |-
-              sum by (namespace, pod) (
-               kube_pod_status_phase{
-                 phase=~"Pending|Unknown|Failed"
-               }
-              ) > 0
-            for: 1m
-            labels:
-              gitlab_project: planet4-documentation-and-issues
-              severity: critical
-              slack_channel: p4-slack-alert
-          - alert: KubernetesContainerOomKiller
+          - alert: KubernetesNodeNotReady
             annotations:
               description: >-
-                Container in pod is OOMKilled
+                Kubernetes node not ready
                 (instance {{ $labels.instance }})
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'Kubernetes container oom killer'
+              summary: "Kubernetes node not ready"
               gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n pod OOMKilled
+                /label  ~\"Terraform Deployment\"\n node not ready
             expr: >-
-               (
-                kube_pod_container_status_restarts_total
-                 -
-                kube_pod_container_status_restarts_total offset 10m >= 1
-                ) and ignoring (reason) min_over_time(
-                  kube_pod_container_status_last_terminated_reason{
-                    reason="OOMKilled"
-                    }[10m]
-                  ) == 1
-            for: 0m
+              kube_node_status_condition{
+               condition="Ready",
+               status="true"
+               } == 0
+            for: 5m
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
               severity: high
-              slack_channel: p4-slack-alert
-          - alert: KubernetesPersistentvolumeError
-            annotations:
-              description: >-
-                Kubernetes PersistentVolume error
-                (instance {{ $labels.instance }})
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'Kubernetes PersistentVolume error'
-              gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n PVC Error
-            expr: >-
-               kube_persistentvolume_status_phase{
-                  phase=~"Failed|Pending",
-                  job="kube-state-metrics"
-                } > 0
-            for: 2m
-            labels:
-              email_contact: pops@greenpeace.org
-              gitlab_project: planet4-documentation-and-issues
-              severity: Critical
               slack_channel: p4-slack-alert
           - alert: KubernetesPodCrashLooping
             annotations:
@@ -230,64 +175,37 @@ additionalPrometheusRulesMap:
                 LABELS = {{ $labels }}
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'Kubernetes pod crash looping'
+              summary: "Kubernetes pod crash looping"
               gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n pod crashlooping
+                /label  ~\"Terraform Deployment\"\n pod crashlooping
             expr: >-
-               increase(
-                kube_pod_container_status_restarts_total[1m]
-                ) > 3
+              increase(
+               kube_pod_container_status_restarts_total[10m]
+               ) > 3
             for: 2m
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
               severity: Critical
               slack_channel: p4-slack-alert
-          - alert: KubeHpaMaxedOut
+          - alert: KubernetesApiServerErrors
             annotations:
               description: >-
-                HPA is running at max replicas
+                Kubernetes API server is
+                experiencing high error rate
               observability_url: >-
                 https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'HPA is running at max replicas'
+              summary: "Kubernetes API server errors"
               gitlab_incident_markdown: |
-                  /label  ~\"Terraform Deployment\"\n HPA maxout
+                /label  ~\"Terraform Deployment\"\n APIServer Error
             expr: >-
-              kube_horizontalpodautoscaler_status_current_replicas{
-                job="kube-state-metrics"
-                } == kube_horizontalpodautoscaler_spec_max_replicas{
-                  job="kube-state-metrics"
-                }
-            for: 15m
-            labels:
-              email_contact: pops@greenpeace.org
-              gitlab_project: planet4-documentation-and-issues
-              severity: Critical
-              slack_channel: p4-slack-alert
-          - alert: KubeProxyDown
-            annotations:
-              description: >-
-                KubeProxy has disappeared from Prometheus target discovery.
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-            expr: >-
-              absent(up{job="kube-proxy"} == 1)
-            for: 15m
-            labels:
-              email_contact: pops@greenpeace.org
-              gitlab_project: planet4-documentation-and-issues
-              severity: Critical
-              slack_channel: p4-slack-alert
-          - alert: KubeSchedulerDown
-            annotations:
-              description: >-
-                KubeScheduler has disappeared from Prometheus target discovery.
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
-              summary: 'Target disappeared from Prometheus target discovery.'
-            expr: >-
-              absent(up{job="kube-scheduler"} == 1)
-            for: 15m
+              sum(rate(apiserver_request_total{
+               job="apiserver",
+               code=~"^(?:5..)$"
+               }[1m])) by (instance)/ sum(rate(apiserver_request_total{
+                 job="apiserver"
+                 }[1m])) by (instance) * 100 > 3
+            for: 2m
             labels:
               email_contact: pops@greenpeace.org
               gitlab_project: planet4-documentation-and-issues
