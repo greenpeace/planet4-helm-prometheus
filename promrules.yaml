@@ -54,7 +54,7 @@ additionalPrometheusRulesMap:
               description: >-
                 Elastic Search Cluster is Red
               observability_url: >-
-                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+                https://grafana.greenpeace.org/goto/mcFYK-ZSR?orgId=1
               runbook_url: >-
                 https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
               summary: "An Elastic Search Cluster is RED"
@@ -74,7 +74,7 @@ additionalPrometheusRulesMap:
               description: >-
                 Elastic Search Cluster is Yellow
               observability_url: >-
-                https://grafana.greenpeace.org/d/7K5QQcuMp/p4-elasticsearch-status?orgId=1&var-entity=planet4&var-environment=prod&var-name=elasticsearch-master-0&var-cluster=elasticsearch&var-instance=&var-interval=1m&from=1626141055496&from=now-6h&to=1626141355496&to=now&var-elastic_node_name=elasticsearch-client-0&var-elastic_node_name=elasticsearch-client-1&var-elastic_node_name=elasticsearch-data-0&var-elastic_node_name=elasticsearch-data-1&var-elastic_node_name=elasticsearch-master-0&var-elastic_node_name=elasticsearch-master-1&var-elastic_node_name=elasticsearch-master-2&refresh=1m
+                https://grafana.greenpeace.org/goto/mcFYK-ZSR?orgId=1
               runbook_url: >-
                 https://www.notion.so/p4infra/ElasticSearch-investigations-07ef977847764bcfbaf8240a7c843da2
               summary: "An Elastic Search Cluster is YELLOW"
@@ -132,7 +132,7 @@ additionalPrometheusRulesMap:
                 and will be lost if not resolved before Prometheus' retention
                 period.
               observability_url: >-
-                https://grafana.greenpeace.org/goto/FQHc71gIR?orgId=1
+                https://grafana.greenpeace.org/goto/rkFAK-ZSg?orgId=1
               summary: >-
                 Thanos sidecar container is not running in {{$labels.cluster}}.
               gitlab_incident_markdown: ""
@@ -151,8 +151,6 @@ additionalPrometheusRulesMap:
               description: >-
                 Kubernetes node not ready
                 (instance {{ $labels.instance }})
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
               summary: "Kubernetes node not ready"
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n node not ready
@@ -173,8 +171,6 @@ additionalPrometheusRulesMap:
                 Pod is crashlooping
                 VALUE = {{ $value }}
                 LABELS = {{ $labels }}
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
               summary: "Kubernetes pod crash looping"
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n pod crashlooping
@@ -193,8 +189,6 @@ additionalPrometheusRulesMap:
               description: >-
                 Kubernetes API server is
                 experiencing high error rate
-              observability_url: >-
-                https://grafana.greenpeace.org/d/VrWrfr1Mz/kubernetes-persistent-volumes?orgId=1&refresh=10s&var-datasource=Thanos%20Global&var-name={{$externalLabels.name}}&var-namespace={{$labels.namespace}}&var-persistentvolumeclaim={{$labels.persistentvolumeclaim}}
               summary: "Kubernetes API server errors"
               gitlab_incident_markdown: |
                 /label  ~\"Terraform Deployment\"\n APIServer Error
