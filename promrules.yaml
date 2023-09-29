@@ -93,14 +93,22 @@ additionalPrometheusRulesMap:
           - alert: cert-managerCertExpiring
             annotations:
               description: >-
-                "Cert-manager certificate for {{$labels.name}} in {{$labels.cluster}} expires in {{$value}} days"
+                "Cert-manager certificate for {{$labels.name}} in
+                {{$labels.cluster}} expires in {{$value}} days"
               observability_url: >-
                 https://grafana.greenpeace.org/d/7YTxIodVz/global-certificates-overview?orgId=1
               runbook_url: >-
                 https://gitlab.greenpeace.org/gp/git/operations/infrastructure/google-cloud-platform/git-ops-k8s/cert-manager-helm-chart/-/wikis/Runbook
               summary: TLS Certificate is going to expire.
             expr: >-
-              floor(0 < ((min(certmanager_certificate_expiration_timestamp_seconds) by (name, cluster, issuer_name) - time()) /60/60/24 ) < 14)
+              floor(
+                0 < (
+                  (min(
+                    certmanager_certificate_expiration_timestamp_seconds)
+                    by (name, cluster, issuer_name) - time()) /60/60/24
+                  )
+                < 14
+              )
             for: 5m
             labels:
               gitlab_project: planet4-documentation-and-issues
@@ -109,14 +117,17 @@ additionalPrometheusRulesMap:
           - alert: cert-managerCertExpired
             annotations:
               description: >-
-                Cert-manager certificate for {{$labels.name}} in {{$labels.cluster}} expired {{$value}} days ago
+                Cert-manager certificate for {{$labels.name}} in
+                {{$labels.cluster}} expired {{$value}} days ago
               observability_url: >-
                 https://grafana.greenpeace.org/d/7YTxIodVz/global-certificates-overview?orgId=1
               runbook_url: >-
                 https://gitlab.greenpeace.org/gp/git/operations/infrastructure/google-cloud-platform/git-ops-k8s/cert-manager-helm-chart/-/wikis/Runbook
               summary: TLS Certificate is going to expire.
             expr: >-
-              floor(abs(((min(certmanager_certificate_expiration_timestamp_seconds) by (name, cluster, issuer_name) - time()) /60/60/24 ) < 0))
+              floor(abs(((min(
+              certmanager_certificate_expiration_timestamp_seconds) by
+               (name, cluster, issuer_name) - time()) /60/60/24 ) < 0))
             for: 5m
             labels:
               gitlab_project: planet4-documentation-and-issues
