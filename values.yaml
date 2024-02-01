@@ -77,6 +77,8 @@ prometheus:
       nginx.ingress.kubernetes.io/auth-tls-secret: "kube-system/thanos-tls"
 prometheusOperator:
   createCustomResource: false
+windowsMonitoring:
+  enabled: false
 
 grafana:
   enabled: false
