@@ -1,10 +1,10 @@
 ---
 prometheus:
-  service:
-    additionalPorts:
-      - name: thanos-grpc
-        protocol: TCP
-        port: 10901
+  # service:
+  #   additionalPorts:
+  #     - name: thanos-grpc
+  #       protocol: TCP
+  #       port: 10901
   prometheusSpec:
     additionalAlertManagerConfigs:
       - scheme: https
