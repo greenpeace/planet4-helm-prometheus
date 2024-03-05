@@ -1,10 +1,5 @@
 ---
 prometheus:
-  # service:
-  #   additionalPorts:
-  #     - name: thanos-grpc
-  #       protocol: TCP
-  #       port: 10901
   prometheusSpec:
     additionalAlertManagerConfigs:
       - scheme: https
@@ -88,8 +83,6 @@ grafana:
 kube-state-metrics:
   resources:
     limits:
-    # cpu: 100m
-    # memory: 128Mi
     requests:
       cpu: 10m
       memory: 32Mi
