@@ -62,6 +62,8 @@ prometheus:
       objectStorageConfig:
         name: thanos-key
         key: objstore.yml
+  thanosService:
+    enabled: true
   thanosIngress:
     enabled: true
     ingressClassName: redirects-nginx
