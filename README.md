@@ -23,6 +23,12 @@ This repository is deployed via [CircleCI](https://circleci.com/gh/greenpeace/pl
  - Create a PR for review to prepare for production deployment.
  - Approval and merge deploys to production.
 
+### Probes
+The Blackbox Exporter Probes are deployed by each site as part of the `planet4-helm-wordpress` chart: https://github.com/greenpeace/planet4-helm-wordpress/blob/main/templates/probe.yaml  
+They are only deployed during a site deployment, so if they are deleted, to redeploy the probes you will need to redeploy the site.  
+**Deleting the Probe CRD will destroy all Probes.**  
+A full re-release (all sites) can be trigged like this: https://github.com/greenpeace/planet4-base/commit/c9948dd017eb49acc73b40f19d238c907b34d51e  
+
 ### Usage
  - Access Grafana:
        [here for P4 dev](https://grafana.p4.greenpeace.org/?orgId=1)
