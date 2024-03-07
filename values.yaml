@@ -1,3 +1,4 @@
+# https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
 ---
 prometheus:
   prometheusSpec:
@@ -55,8 +56,9 @@ prometheus:
     thanos:
       version: v0.20.1
       objectStorageConfig:
-        name: thanos-key
-        key: objstore.yml
+        existingSecret:
+          name: thanos-key
+          key: objstore.yml
   thanosService:
     enabled: true
   thanosIngress:
