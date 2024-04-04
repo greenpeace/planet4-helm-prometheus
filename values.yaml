@@ -97,6 +97,8 @@ defaultRules:
   rules:
     # GKE doesn't deploy a kubeScheduler
     kubeScheduler: false
+    # GKE Kube Proxy is not referenced properly with this mixin alert
+    kubeProxy: false
   disabled:
     # If Prometheus is failing to send alerts to any Alertmanager we will not
     # see this alert. It is therefore redundant. Instead we will be notified
