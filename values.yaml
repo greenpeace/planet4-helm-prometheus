@@ -96,7 +96,7 @@ defaultRules:
   create: true
   rules:
     # GKE doesn't deploy a kubeScheduler
-    kubeScheduler: false
+    kubeSchedulerAlerting: false
     # GKE Kube Proxy is not referenced properly with this mixin alert
     kubeProxy: false
   disabled:
