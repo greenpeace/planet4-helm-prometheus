@@ -104,6 +104,13 @@ defaultRules:
     # see this alert. It is therefore redundant. Instead we will be notified
     # via the watchdog alert sent to Healthchecks.io
     PrometheusErrorSendingAlertsToAnyAlertmanager: true
+    # Our environment is not mature enough for this alert.
+    # Until we have properly defined resource requests,
+    # it is only contributing to alert fatigue.
+    # Additionally it is missing a runbook:
+    # https://runbooks.prometheus-operator.dev/runbooks/node/nodesystemsaturation
+    # https://github.com/prometheus-community/helm-charts/issues/3893
+    NodeSystemSaturation: true
 
 kubeControllerManager:
   enabled: false
