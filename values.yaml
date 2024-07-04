@@ -93,9 +93,7 @@ alertmanager:
   enabled: false
 
 defaultRules:
-  # Default Prometheus Operator rules are too sensitive for our environment,
-  # typically not critical, and too noisy.
-  create: false
+  create: true
   rules:
     # GKE doesn't deploy a kubeScheduler
     kubeSchedulerAlerting: false
@@ -113,6 +111,8 @@ defaultRules:
     # https://runbooks.prometheus-operator.dev/runbooks/node/nodesystemsaturation
     # https://github.com/prometheus-community/helm-charts/issues/3893
     NodeSystemSaturation: true
+    # We have specific deployments that need to ignore this alert
+    KubeHpaMaxedOut: true
 
 kubeControllerManager:
   enabled: false
