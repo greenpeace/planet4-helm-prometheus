@@ -93,7 +93,9 @@ alertmanager:
   enabled: false
 
 defaultRules:
-  create: true
+  # Default Prometheus Operator rules are too sensitive for our environment,
+  # typically not critical, and too noisy.
+  create: false
   rules:
     # GKE doesn't deploy a kubeScheduler
     kubeSchedulerAlerting: false
