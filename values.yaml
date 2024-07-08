@@ -113,6 +113,8 @@ defaultRules:
     NodeSystemSaturation: true
     # We have specific deployments that need to ignore this alert
     KubeHpaMaxedOut: true
+    # This alert flaps often, isn't critical, and isn't prioritised.
+    NodeFilesystemFilesFillingUp: true
 
 kubeControllerManager:
   enabled: false
