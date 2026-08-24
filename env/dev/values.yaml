@@ -24,6 +24,14 @@ prometheus:
       gp_name: planet4-dev
       cluster: planet4-dev
       gp_location: gcp
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: standard
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 40Gi
   thanosIngress:
     hosts:
       - dev.thanos.p4.greenpeace.org
