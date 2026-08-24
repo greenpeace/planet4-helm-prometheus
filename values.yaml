@@ -30,14 +30,6 @@ prometheus:
         static_configs:
           - targets:
               - "alertmanager-2.greenpeace.net"
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: standard
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 40Gi
     resources:
       requests:
         cpu: 2500m
