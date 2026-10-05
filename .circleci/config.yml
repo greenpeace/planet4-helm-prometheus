@@ -26,7 +26,7 @@ jobs:
     steps:
       - checkout
       - run: activate-gcloud-account.sh
-      - deploy:
+      - run:
           name: Deploy to development cluster
           command: make dev | tee /tmp/deploy.log
   prod:
@@ -36,7 +36,7 @@ jobs:
     steps:
       - checkout
       - run: activate-gcloud-account.sh
-      - deploy:
+      - run:
           name: Deploy to production cluster
           command: make prod | tee /tmp/deploy.log
 workflows:
